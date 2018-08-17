@@ -1,0 +1,503 @@
+
+<script type="text/javascript" src="https://s3.amazonaws.com/countingcalculi-assets/vendor/transpose_table.js"></script>
+
+<p>Use <a target="_blank"
+href="http://www.countingcalculi.com/interactives/uber_v_taxis/">the interactive
+simulation </a>see for yourself.</p>
+
+<div class='row'>
+    <div class='col-sm-6'>
+        <h4 class="text-center">Uber</h4>
+        <img class="img-responsive" src="https://s3.amazonaws.com/countingcalculi-assets/images/uber_v_taxis_images/uber_grid.gif" alt="image alt text" title="">
+    </div>
+    <div class='col-sm-6'>
+        <h4 class="text-center">Taxi</h4>
+        <img class="img-responsive" src="https://s3.amazonaws.com/countingcalculi-assets/images/uber_v_taxis_images/taxi_grid.gif" alt="image alt text" title="">
+    </div>
+</div>
+
+<p style="padding:20px;"></p>
+
+<blockquote class="text-center">"Prices formed a worldwide web of communication long before there was an Internet."</blockquote>
+<p class="text-right">
+    - Thomas Sowell, <a target="_blank" target="_blank"
+    href="https://app.owlandscroll.com/annotation/YIKRma5SwXZIieBYMiIt"><em>Basic
+    Economics</em></a>
+</p>
+
+<p><strong>1. Introduction</strong></p>
+
+<p>Uber, the ride-sharing company that connects freelance drivers with
+passengers via a smartphone app, gained a market valuation of over <a target="_blank"
+href="http://www.wsj.com/articles/ubers-new-funding-values-it-at-over-41-billion-1417715938">$41
+billion in 2015.</a> According to the company, its <a target="_blank" target="_blank"
+href="https://www.youtube.com/watch?v=76q7PDnxWuE">surge pricing scheme</a>,
+whereby it raises prices during high demand to encourage more drivers to get on
+the road, is absolutely essential for it to "provide a reliable ride at all
+times"; something that taxis, with their fixed prices, cannot do. But the
+company's <a target="_blank" target="_blank"
+href="http://www.businessinsider.com/uber-surge-pricing-7-to-8-times-higher-than-usual-2013-12">own
+customers apparently loath the inconsistent prices</a>.<sup><a href="#fn1" id="ref1">1</a></sup> Uber's real advantage, the customers might
+argue, is its fantastically user-friendly technology through which passengers
+can request a car, wherever they are, and watch on their phones as it drives to
+pick them up. Why does Uber muck it all up with an arcane pricing algorithm?</p>
+
+<p>So what's more important to Uber's success, <a target="_blank"
+href="http://thefederalist.com/2015/09/29/the-free-market-its-like-uber-but-for-everything/">its
+surge pricing</a> or its slick user interface? To find out we have developed an
+<a target="_blank" href="http://www.countingcalculi.com/interactives/uber_v_taxis/">interactive
+simulation </a>that removes Uber's technological advantage over taxis but keeps
+its surge pricing scheme. The simulation also includes a taxi-only world so you
+can compare Uber's dynamic pricing model to a more traditional fixed price taxi
+model. Here's how it works.</p>
+
+<p><strong>2. The Model</strong></p>
+
+<p>First and foremost it's important to understand that the simulation is just a
+model. As such, it is not meant to be a perfect replication of the real world
+with all its complexities; it is simply a representation based on reasonable
+assumptions that helps us study something not easily observable in the real
+world. In this case, we can't make Uber stop using surge pricing for the sake of
+science, so we'll have to build a model that lets us probe what the world might
+be like if they did.</p>
+
+<p>In our simplified city, drivers (in either Uber cars or taxi cabs), randomly
+drive around square city blocks. When they come to an intersection, they shake a
+magic eight ball to decide whether to turn right, left, or go straight.
+Similarly, passengers will appear randomly throughout the city. When drivers and
+passengers end up in the same spot, the driver picks up the passenger and drives
+it (passengers are gender neutral in this simpler world) around for a random
+amount of time ranging from four to 100 minutes, whereupon the driver drops off
+the passenger and drives about until they pick up another passenger.</p>
+
+<p>Since most cities tightly regulate both the prices charged by taxis and the
+number of cabs through mechanisms like <a target="_blank"
+href="https://en.wikipedia.org/wiki/Taxicabs_of_New_York_City#Medallion_taxis">New
+York's medallions</a>, in our taxi world, both the price and the number of taxis
+are fixed.</p>
+
+<p>As mentioned above, the Uber drivers do not receive requests from passengers
+and drive to pick them up. Just like taxis, they must drive around randomly to
+pick up passengers. The only difference between the taxi world and the Uber
+world is that Uber drivers respond to a price incentive that Uber can increase
+or decrease to get more or less drivers on the road. Uber implements its price
+incentive by multiplying its base rate by a "surge" multiplier. A 1X multiplier
+is the base rate, while 1.5X is one a half times the base rate. </p>
+
+<p>While Uber's specific algorithm to calculate the surge multiplier is
+obviously proprietary, we have developed a reasonable approximation for our
+simulation. Basically, when the total time spent waiting by all passengers
+currently requesting a ride increases, the surge multiplier increases. When the
+total time decreases, the surge multiplier decreases.</p>
+
+<p>Surge pricing relies on the assumption that when prices rise, more drivers
+get on the road. For example, the Uber driver Milton is sitting at home happily
+studying for his economics final. When the surge multiplier rises above say,
+1.3X, Milton decides it's worth getting on the road to make some money. After he
+gives one ride to a passenger, the surge drops to 1.2X, but since Milton is
+already on the road he figures he'll drive around for a little bit longer. He
+picks up a few more passengers; but, after a while, demand has dropped enough
+that he isn't able to find a passenger for 10 minutes. So, he turns off his Uber
+driver app and returns to his economics studies.</p>
+
+<p>Milton is just one of 100 Uber drivers in our simulation. To model how all
+100 drivers might respond to the surge multiplier we use the distribution
+function shown below. It indicates how many drivers will be on the road for a
+given surge multiplier.</p>
+
+<p class="text-center"><strong>Uber Driver Incentive Curve</strong></p>
+
+<p class="text-center"><img class="img-responsive" style='margin-left: auto; margin-right: auto; width: 550px;' src="https://s3.amazonaws.com/countingcalculi-assets/images/uber_v_taxis_images/image_2.png" alt="image alt text" title=""></p>
+
+<p>The above is a normal distribution function with a default mean surge of 1.5X
+and a standard deviation of 0.3X. According to this distribution, when the surge
+multiplier is 1X (i.e. the base rate), there will be five drivers on the road.
+When it rises to 1.1X, 5 new drivers will randomly appear somewhere on the road
+and begin driving. At 1.5X, 50 total drivers will be on the road, and at 2.2X,
+all 100 will be. When the surge drops back to 1X, all but the original five
+drivers will disappear from the road after they have not picked up a passenger
+in 10 minutes.</p>
+
+<p>Real passengers can decide that the price of an Uber is too high or that it's
+not worth waiting for a cab. But for the sake of simplicity in our model, we're
+going to assume all passengers wait for a ride for as long as it takes and are
+willing to pay any price for that ride when it comes (although they may complain
+about it on Twitter later).</p>
+
+<p>Outside of their own profit, both Uber and taxis have to balance at least
+three demands: the wait time of the passengers, the price of the ride and the
+drivers' income. It's important to realize that these three demands often
+conflict with each other, so Uber and taxis must balance trade-offs as best they
+can. The simulation keeps statistics on these three demands for both the Uber
+and taxi worlds so we can compare the results. </p>
+
+<p><strong>3. Constant Low Demand</strong></p>
+
+<p>Now that we have a simple simulation backed by reasonable assumptions, we can
+test how critical surge pricing is to Uber's success. Let's begin with a
+baseline case where demand is absolutely constant. From 12 PM to midnight there
+are always exactly five passengers requesting rides. Since this is the baseline
+case we'll keep the default settings as follows:</p>
+
+<p class="text-center"><strong>Constant Demand Settings</strong></p>
+
+<p>
+    <table class='table' style='padding: 10px; margin-right: auto; margin-left: auto; max-width: 400px;'>
+        <tbody>
+            <tr>
+            <td>Number of Taxis</td> <td>10</td>
+          </tr>
+            <tr>
+            <td>Taxi Price per Minute</td> <td>$0.25</td>
+          </tr> <tr>
+            <td>Uber 1x Surge Price<br>per Minute</td>
+            <td>$0.10</td>
+          </tr> <tr>
+            <td>Uber Max Surge</td> <td>1000</td>
+          </tr>
+        </tbody>
+    </table>
+</p>
+
+<p>Here are the results for the constant demand case.<sup><a href="#fn2" id="ref2">2</a></sup></p>
+
+<p class="text-center"><strong>Uber v Taxis - Constant, Low Demand</strong></p>
+
+<p class="text-center"><img class="img-responsive" style='margin-left: auto; margin-right: auto; width: 550px;' src="https://s3.amazonaws.com/countingcalculi-assets/images/uber_v_taxis_images/image_4.png" alt="image alt text" title=""></p>
+
+<div class="text-center">
+    <table class='table flip_table' style="margin-right: auto; margin-left: auto;">
+        <tr>
+          <td></td>
+          <th>Average wait time</th>
+          <th>Longest Wait time</th>
+          <th>Average price per minute</th>
+          <th>Average driver salary per hour</th>
+          <th>Total Rides Completed</th>
+        </tr>
+        <tr>
+          <th>Taxi</th> <td>00:25:00</td> <td>02:16:00</td> <td>$0.25</td>
+          <td>$7.12</td> <td>133</td>
+        </tr>
+        <tr>
+          <th>Uber</th> <td>00:19:30</td> <td>01:42:30</td> <td>$0.11</td>
+          <td>$2.93</td> <td>174</td>
+        </tr>
+    </table>
+</div>
+
+<p>Even though Uber averages approximately 10 cars on the road, the same as the
+fixed number of taxis, it's average wait time is significantly, though not
+hugely, lower. Because drivers and passengers must randomly end up in the same
+spot, a passenger can end up waiting for a long time, even if demand is
+constant. When that happens, Uber can increase its supply of cars to reach the
+waiting passenger faster. This is most evident in Uber's much smaller Longest
+Wait Time. In this constant low demand case, Uber's surge pricing acts as a sort
+of wait time variance dampener, ensuring that any given passengers isn't going
+to wait an absurdly long time. Of course, the decrease in wait time variance
+comes with an increase in price variance. </p>
+
+<p>Unsurprisingly, the Uber rides are significantly cheaper because Uber's base
+rate (1X) is lower than the taxi's fixed rate. Taxis have to maintain a high
+fixed rate because the drivers must be compensated for times of low demand (like
+this one) when they spend a great deal of time driving around without any
+passengers. One way to think about how taxis solve the pricing problem is by
+making the low demand passengers subsidize the high demand passengers.</p>
+
+<p>While the passengers of the Uber world get a great deal, the drivers get
+hosed. Their average salary is only $2.93 per hour. Most drivers will not remain
+drivers for long with this measly income, so Uber's model, a low base rate with
+surge incentives, doesn't really work in this constant low demand case. The
+taxi's fixed price model is the only one that's sustainable. However, the real
+world does not have a constant demand.</p>
+
+<p><strong>4. Changing Demand</strong></p>
+
+<p>So what happens when the demand changes? In particular, we'll be interested
+in what happens during a large spike in demand.</p>
+
+<p>The "Auto-change Demand" option in the simulation creates several spike
+throughout the day. Here are the results.<sup><a href="#fn3" id="ref3">3</a></sup></p>
+
+<p class="text-center"><strong>Uber v Taxis - Changing Demand</strong></p>
+
+<p class="text-center"><img class="img-responsive" style='margin-left: auto; margin-right: auto; width: 550px;' src="https://s3.amazonaws.com/countingcalculi-assets/images/uber_v_taxis_images/image_5.png" alt="image alt text" title=""></p>
+
+<div class="text-center">
+    <table class='table flip_table' style="margin-right: auto; margin-left: auto;">
+        <tr>
+        <td></td> <th>Average wait time</th> <th>Longest Wait time</th> <th>Average
+        price
+    per minute</th>
+        <th>Average driver salary
+    per hour</th>
+        <th>Total Rides Completed</th>
+      </tr> <tr>
+        <th>Taxi</th> <td>01:50:30</td> <td>06:15:00</td> <td>$0.25</td>
+        <td>$11.01</td> <td>208</td>
+      </tr> <tr>
+        <th>Uber</th> <td>00:16:30</td> <td>01:37:00</td> <td>$0.27</td>
+        <td>$11.09</td> <td>737</td>
+      </tr>
+    </table>
+</div>
+
+<p>Let's consider the taxis world first. </p>
+
+<p class="text-center"><strong>Taxis - Changing Demand</strong></p>
+
+<p class="text-center"><img class="img-responsive" style='margin-left: auto; margin-right: auto; width: 550px;' src="https://s3.amazonaws.com/countingcalculi-assets/images/uber_v_taxis_images/image_6.png" alt="image alt text" title=""></p>
+
+<p>At the very beginning, things are much like the constant demand case. But as
+demand starts to step it's way up between 1:30 and 4:30, it becomes harder and
+harder for the 10 taxis to keep up with the requests. At the beginning of the
+6:30 spike in demand they haven't even serviced all the requests from the 4:30
+rise. Finally during the 6:30 spike, the kind that would occur after a huge
+concert in downtown Manhattan, the taxis simply cannot cope with the demand.
+Even though the number of new requests drops to zero after the spike, the taxis
+still take hours to pick up all the passengers. At midnight, four and a half
+hours after the spike ended, there are still 15 requests that haven't been
+fulfilled. </p>
+
+<p>Simply put, in a world with highly variable demand, the fixed supply of taxis
+cannot fulfill all the ride requests. </p>
+
+<p>But does Uber do any better? Simply put, yes.</p>
+
+<p class="text-center"><strong>Uber - Changing Demand</strong></p>
+
+<p class="text-center"><img class="img-responsive" style='margin-left: auto; margin-right: auto; width: 550px;' src="https://s3.amazonaws.com/countingcalculi-assets/images/uber_v_taxis_images/image_7.png" alt="image alt text" title=""></p>
+
+<p>The smaller steps earlier in the day that quickly overwhelmed the taxis are
+easily handled by Uber. From noon to 6PM, even though the surge multiplier only
+fluctuates between 1X and 2X, the supply of drivers fluctuates between five and
+95. Equally importantly, when the surge multiplier drops, these drivers get off
+the road and find something better to do with their time. That allows Uber to
+keep their base rate lower without torpedoing the driver's salary.</p>
+
+<p>During the 6:30-7:30 spike Uber really shines. All passengers got a ride by
+8:30. In under an hour, Uber handles what takes the taxis more than four and a
+half hours. Because Uber provides rides faster, it can provide rides to many
+more passengers; in this case 737 to the taxi's meager 208.</p>
+
+<p>However, all this convenience comes at a cost. The surge multiplier peaked at
+6.5X, which means passengers were paying <span>$</span>0.65 a minute during the
+spike, while the taxi passengers were paying only <span>$</span>0.25 per minute.
+But this price difference is really an illusion. The only passengers who paid
+<span>$</span>0.25 per minute were those lucky enough to get a ride. The others
+were left out in the cold for hours with no way to get home. Furthermore, in the
+real world, the Uber passengers who don't want to pay the surge price can wait
+an hour for it to come down to <span>$</span>0.10 and still get home hours
+before their taxi world compatriots. </p>
+
+<p>This is the real power of dynamic pricing. The yuppie parents who need to get
+home ASAP to relieve the babysitter can pay the extra money during the surge.
+Meanwhile, the poor college kids can wait it out at a bar and, even with the
+added beer cost, still get home cheaper and faster than they can in a
+fixed-price world.</p>
+
+<p>It's also worth asking how our model compares with reality at this point.
+While we don't expect the surge multiplier, price per minute, etc to match the
+real world, we do expect the trends of our surge multiplier and driver supply to
+be consistent with Uber's real world trends. Fortunately, <a target="_blank"
+href="http://faculty.chicagobooth.edu/chris.nosko/research/effects_of_uber%27s_surge_pricing.pdf">a
+paper by the Chicago Booth School of Business</a> tested the effects of the
+surge multiplier using Uber's data. Here is a graph from their paper.</p>
+
+<p class="text-center"><strong>Uber Driver Supply and Ride Requests After a Sold Out
+Concert</strong></p>
+
+<p class="text-center"><img class="img-responsive" style='margin-left: auto; margin-right: auto; width: 550px;' src="https://s3.amazonaws.com/countingcalculi-assets/images/uber_v_taxis_images/image_8.png" alt="image alt text" title=""></p>
+
+<p>Just like our simulation, during a surge period the supply of Uber drivers
+rises as the number of ride requests increases, levels off as the demand is met,
+and returns back to normal as the demand returns to normal. Our simulation looks
+like it's at least a good approximation of reality.</p>
+
+<p>What about the Uber drivers? Even though the average price per minute in the
+Uber world is only <span>$</span>0.02 higher than the taxi world, the Uber
+drivers' average hourly wage is <span>$</span>.07 higher than the taxi drivers.
+Now it's important to realize that this is an average. The drivers who only hit
+the road for the 6:30 spike made a lot more per hour than the original five
+drivers who were pounding the pavement the entire day. </p>
+
+<p>Is this fair? Again the power of dynamic pricing is made manifest. The five
+drivers who have the time and need the money the most, maybe they're between
+jobs at the moment, are willing (but maybe not happy) to drive throughout the
+day. Those who need to study for their Economics finals are only willing to
+drive during the 6:30 spike. In a heavily regulated, fixed price world, the five
+potential Uber drivers who need the money the most will make exactly zero
+dollars sitting at home, while the potential spike-drivers will use their study
+breaks to watch Gilmore Girls instead of putting their economics knowledge into
+practice. All while the yuppies and the college kids are left out in the below
+freezing weather, fighting over the ten available taxis.</p>
+
+<p><strong>5. Emergencies</strong></p>
+
+<p>There is one final case worthy of our attention. Uber has provoked absolute
+outrage and accusations of <a target="_blank"
+href="http://www.nytimes.com/2014/01/12/magazine/is-ubers-surge-pricing-an-example-of-high-tech-gouging.html">price-gouging</a>
+several times because its algorithm steeply increased prices during emergencies
+like <a target="_blank"
+href="http://www.huffingtonpost.com/2014/07/08/uber-surge-pricing_n_5568087.html">Hurricane
+Sandy in New York </a>and the <a target="_blank"
+href="http://www.nbcnews.com/storyline/sydney-hostage-standoff/ubers-surge-pricing-near-siege-sydney-sparks-outrage-n268371">hostage
+situation in Sydney</a>. It's all well and good that Uber provides yuppie
+parents and drunk college kids a way home on a Saturday night, but even the most
+ardent Uber supporters wouldn't condone the use of surge pricing during an
+emergency, right?</p>
+
+<p>Let's see if we can use our simulation to model the potential trade offs of
+surge pricing during an emergency like Hurricane Sandy. In an emergency, demand
+for transportation is high because public transit is either limited or out
+completely and <a target="_blank"
+href="http://www.nydailynews.com/new-york/dropoff-taxi-cabs-needed-article-1.1198511">taxis
+</a><a target="_blank"
+href="http://www.nydailynews.com/new-york/dropoff-taxi-cabs-needed-article-1.1198511">are
+not </a><a target="_blank"
+href="http://www.nydailynews.com/new-york/dropoff-taxi-cabs-needed-article-1.1198511">driving
+either</a>. Because of the horrible conditions, naturally Uber drivers don't
+want to be on the road either. To get drivers on the road, and here's the rub,
+Uber claims it must raise its prices significantly.</p>
+
+<p>To model the decrease in the supply of Uber drivers, we will adjust the Uber
+Driver Incentive Curve such that they will require more money than usual to
+drive through the 80 MPH winds and flooding waters. Here's what our new
+incentive curve looks like with a mean of 5X and a standard deviation of
+0.8X.</p>
+
+<p class="text-center"><strong>Uber Driver Incentive Curve - Emergency</strong></p>
+
+<p class="text-center"><img class="img-responsive" style='margin-left: auto; margin-right: auto; width: 550px;' src="https://s3.amazonaws.com/countingcalculi-assets/images/uber_v_taxis_images/image_9.png" alt="image alt text" title=""></p>
+
+<p>Notice that hardly anyone is going to drive for less than a 3X multiplier and
+that even with a 5X multiplier only half the usual 100 drivers will be out. I've
+also reduced the number of taxis to five to reflect the decrease in their supply
+of drivers.</p>
+
+<p>During an emergency like Hurricane Sandy, demand probably doesn't really
+spike like it does after a concert or on a Saturday night. Rather, it's
+consistently high, without any huge spikes. As such, our demand will fluctuate
+between 40 and 60 - until about 10PM, when it will drop off completely.</p>
+
+<p>Okay, now that we have a reduced supply of drivers and a high, fluctuating
+demand let's see the results.</p>
+
+<p class="text-center"><strong>Uber v Taxis - Emergency</strong></p>
+
+<p class="text-center"><img class="img-responsive" style='margin-left: auto; margin-right: auto; width: 550px;' src="https://s3.amazonaws.com/countingcalculi-assets/images/uber_v_taxis_images/image_10.png" alt="image alt text" title=""></p>
+
+<div class="text-center">
+    <table class='table flip_table' style="margin-right: auto; margin-left: auto;">
+        <tr>
+            <td></td>
+            <th>Average wait time</th> <th>Longest Wait time</th>
+            <th>Average price per minute</th>
+            <th>Average driver salaryper hour</th>
+            <th>Total Rides Completed</th>
+        </tr>
+        <tr>
+            <th>Taxi</th> <td>03:19:00</td> <td>11:54:00</td> <td>$0.25</td>
+            <td>$13.06</td> <td>111</td>
+        </tr>
+        <tr>
+            <th>Uber</th> <td>00:33:00</td> <td>05:18:00</td> <td>$0.51</td>
+            <td>$25.99</td> <td>957</td>
+        </tr>
+    </table>
+</div>
+
+<p>From the graph you can see the surge multiplier is drastically higher than
+normal. Once the simulation gets going it ranges between 4X and 7X, so the
+passengers are paying a heck of a lot more money than usual. This is also
+reflected in the Average Price per Minute which is more than double the taxi's
+price. So far it looks like Uber really is price gouging people when they need a
+ride the most.</p>
+
+<p>However, the demand for rides is much higher than normal and the supply of
+rides, both Ubers and taxis, is much lower than normal so rides are much more
+scarce.</p>
+
+<p>In the fixed price world of taxis, there simply aren't enough rides for
+everyone who needs one. Thus, the taxi world can only use random chance, whoever
+happens to catch a cab first, to allocate the scarce rides to passengers. The
+passengers lucky enough to flag down a ride will get one, while the rest will be
+left out in the rain.</p>
+
+<p>But the dynamically priced world of Uber has another lever to pull. By
+increasing its prices, Uber can incentivize more drivers to brave the weather,
+thus providing more rides to passengers that the taxi world leaves out in the
+rain. </p>
+
+<p>Uber will, however, be charging higher prices, and some potential passengers
+will not be able to afford the ride. So it's reasonable to ask if this is fair.
+From the driver's perspective it certainly is. They are braving the weather when
+everyone wants to be safe at home. They're taking on risk and rightly deserved
+to be compensated for it. </p>
+
+<p>But what about the passengers who can't afford Uber's higher prices? In the
+fixed price world most of them still won't get a ride, but some will be lucky
+enough to snag one. Is randomly allocating scarce rides fair? I don't know. But
+either way, <a target="_blank"
+href="https://app.owlandscroll.com/annotation/vTH2Cn7upyGnYsJKGPa7">fairness
+isn't the only thing that matters.</a></p>
+
+<p>According to the simulation, Uber is able to service 957 passengers to the
+taxi's 111. That's 846 more people who can save their possessions from the
+flood, or who can bring food home to their children, or who can take care of an
+ailing parent. And that is certainly worth something.</p>
+
+<p><strong>6. Conclusion</strong></p>
+
+<p>The final example and its real life analogies of Hurricane Sandy and the
+Australian Hostage Situation show that questions about Uber's surge pricing are
+not just trivial matters of providing a convenient ride home to concert
+attendees. It also conjures deeper moral questions about what we value in
+society. </p>
+
+<p>Surge pricing seems unfair on the surface, but ultimately it provides more
+rides for more people by relying on market pricing. In <a target="_blank"
+href="https://app.owlandscroll.com/annotation/w9tPzyZ5Ul0JdteEBRcl"><em>The
+Better Angels of Our Nature</em></a>, Steven Pinker says the market pricing
+model of morality "requires the nonintuitive tools of symbolic mathematics" that
+"allows one to reason in terms of proportionality". In
+other words, surge pricing feels so wrong because our brains did not evolve to
+understand the complex relationships between supply, demand, and price. But with
+the help of mathematics, economics, and computer simulations we can better
+understand the constant trade-offs involved in the allocation of scarce
+resources like transportation.</p>
+
+<p>As stated, this simulation is not a precise recreation of reality. It is a
+simulation. But those who want to pretend that we live in <a target="_blank"
+href="http://www.nytimes.com/2014/04/23/opinion/taming-the-digital-wild-west.html">a
+world without scarcity</a> or where <a target="_blank"
+href="https://hbr.org/2014/12/what-economists-dont-get-about-ubers-surge-pricing">people
+don't respond to incentives</a> are not recreating reality either. They are
+imagining a fiction. So long as we are stuck with each other in this world,
+dynamic pricing will continue to be critical to Uber's success... And ours.</p>
+
+<hr style="border-width: 3px;">
+
+<p>
+<sup id="fn1">1. All of the
+articles we could find <a target="_blank"
+href="https://hbr.org/2015/12/everyone-hates-ubers-surge-pricing-heres-how-to-fix-it">rely
+on Twitter outbursts from Uber users</a> (particularly <a target="_blank"
+href="http://www.businessinsider.com/jerry-seinfelds-wife-spent-415-during-ubers-surge-pricing-2013-12">Jerry
+Seinfeld's wife</a>) for evidence. Perhaps all the controversy indicates is that
+people don't like to pay more money.<a href="#ref1" title="Jump back to footnote 1 in the text.">^</a></sup>
+</p>
+
+<p>
+<sup id="fn2">2. Note that if you run
+this or any other case yourself you will receive slightly different results
+because in the simulation, as in the real world, there is a great deal of
+randomness.<a href="#ref2" title="Jump back to footnote 2 in the text.">^</a></sup>
+</p>
+
+<p>
+<sup id="fn3">3. You can easily recreate the
+results yourself. Try it with different inputs settings and see how you can
+balance Wait Time, Ride Cost, and Driver Salary for both the Taxi and Uber
+worlds.<a href="#ref3" title="Jump back to footnote 3 in the text.">^</a></sup>
+</p>

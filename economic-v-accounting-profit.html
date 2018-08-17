@@ -1,0 +1,160 @@
+<script src="https://s3.amazonaws.com/countingcalculi-assets/vendor/jquery.visible.min.js"></script>
+<script src="https://s3.amazonaws.com/countingcalculi-assets/vendor/d3.v3.min.js"></script>
+<script type="text/javascript" src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/economic_vs_accounting_profit.js"></script>
+<script type="text/javascript">
+    var auto_change = true;;
+    $(window).scroll(function(){
+        if (auto_change == true && $('#graph2').visible()){
+            $('#change_graph').click();
+            auto_change = false;
+        }
+    });
+</script>
+<style>
+    .axis path, .axis line
+    {
+        fill: none;
+        stroke: #777;
+        shape-rendering: crispEdges;
+        stroke-width: 3;
+    }
+    .a_label{
+        font-size: 12px;
+    }
+    .revenue {
+        fill: green;
+    }
+    .cost_to_produce{
+        fill: red;
+    }
+    .oppertunity_cost{
+        fill: orange;
+    }
+    .a_bar{
+        fill: white;
+        font-weight: bold;
+    }
+    .sum_line{
+        fill: blue;
+        font-size: 11px;
+    }
+    .equation{
+        text-align: center;
+        font-weight: bold;
+    }
+    .visualiztion_link{
+        text-align: center;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        font-style: italic;text-align: center;
+    }
+        
+</style>
+
+<p>
+    Most people use the word “profit” to mean “accounting profit” or “net profit”,
+    which is the seller’s revenue (the amount he can get for all of his goods or services)
+    minus his production costs (the money he spends to produce his product). However, when
+    economists use the word “profit”, they most likely mean “economic profit”.  Economic
+    profit is a seller’s revenue minus his production costs AND minus his opportunity costs,
+    which is the amount of money he could have made if he had produced anything else. In other
+    words, economic profit is the accounting profit for one good minus the accounting profit of
+    the good that would have made him the most money had he produced it instead.
+</p>
+
+<p>
+    To better understand this, let's imagine there's a town where everyone makes
+    either necklaces or bracelets. Every necklace costs the same as every other
+    necklace, and every bracelet costs the same as every other bracelet. Bob spent
+    <span>$</span>30 on enough metals and beads to make ten necklaces or ten
+    bracelets, either of which will take him an hour to make. He makes ten bracelets,
+    takes them to the fair, and sells them all for <span>$</span>15 each. His accounting profit is:
+</p>
+
+<p class='equation'>
+    <span>$</span>15 x 10 bracelets - <span>$</span>30 = <span>$</span>120
+</p>
+
+<p class='equation'>(Price x Quantity - Production Cost = Accounting Profit)</p>
+
+<p>
+    But while at the fair, Bob realizes that necklaces are selling for
+    <span>$</span>20. This means that if he had used his time and supplies to make
+    necklaces, his accounting profit would have been:
+</p>
+
+<p class='equation'>
+    <span>$</span>20 x 10 necklaces - <span>$</span>30 = <span>$</span>170
+</p>
+
+<p>
+    Thus, the opportunity cost of not making necklaces is <span>$</span>170. So Bob's economic profit is:
+</p>
+
+<p class='equation'>
+    <span>$</span>15 x 10 bracelets - <span>$</span>30 - <span>$</span>170 = -<span>$</span>50
+</p>
+
+<p class='equation'>(Price x Quantity - Production Cost - Opportunity Cost = Economic Profit)</p>
+
+<p>
+    If Bob is reasonable, he'll start making necklaces instead of bracelets. But as a result,
+    at the next fair there will be more necklaces and fewer bracelets which will affect their
+    respective prices. Because there are more necklaces, the price goes down from <span>$</span>20
+    to say <span>$</span>17. Because there are fewer bracelets the price goes up from <span>$</span>15
+    to say <span>$</span>17.  Now the accounting profits for both necklaces and bracelets are the same:
+</p>
+
+<p class='equation'>
+    <span>$</span>17 x 10 (necklaces or bracelets) - <span>$</span>30 = <span>$</span>140
+</p>
+
+<p>
+    Thus Bob's economic profit, the accounting profit of necklaces minus the accounting profit of bracelets, is zero.
+</p>
+
+    <p>
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <button ga-event="true" ga-category="Visualizations" ga-action="Interaction" ga-label="Economic vs Accounting Profit Graph"  id="change_graph" type="button" class="btn btn-success">Click to switch to Economic Profit</button>
+        </div>
+    </div>
+</p>
+<div class='row'>
+    <div class='col-sm-6 col-xs-12 text-center' id='graph_column'>
+        <p><strong>When Bob makes bracelets</strong></p>
+        <div id="graph1"></div>
+    </div>
+    <div class='col-sm-6 col-xs-12 text-center' id='graph_column2'>
+        <p><strong>When Bob makes necklaces</strong></p>
+        <div id="graph2"></div>
+    </div>
+</div>
+<div class='row'>
+    <div class='col-xs-12 visualiztion_link'>
+        Visualization code available on <a target="_blank" href="https://github.com/kmclaugh/D3_Graphs">Github</a>
+    </div>
+
+<p>
+    This example demonstrates that if any seller is making negative economic profit selling some good,
+    it means she could be making more money producing some other good, so she'll switch to making the
+    other good. By the same logic, if any seller is making positive economic profit selling any good,
+    other people will start producing that good, which will drive the price down until everyone's
+    economic profit is zero. Thus, zero economic profit is called the "normal profit".
+</p>
+
+<p>
+    It is not normal, however, because in the real world sellers can make any number of different goods,
+    different versions of the same good sell for different prices, and it is not easy to switch from
+    making one good to another. So it's hard to determine opportunity cost. Still, in many markets,
+    economic profit will hover around zero in the long run.
+</p>
+
+<hr class='end-bar'  style="border-width: 3px;">
+
+<p>&nbsp</p>
+<p>&nbsp</p>
+<p>&nbsp</p>
+<p>&nbsp</p>
+<p>&nbsp</p>
+<p>&nbsp</p>

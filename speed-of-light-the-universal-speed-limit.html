@@ -1,0 +1,61 @@
+<style> .axis path, .axis line { fill: none; stroke: #777; shape-rendering: crispEdges; stroke-width: 3; } .a_label{ font-size: 13px; } .revenue { fill: green; } .cost_to_produce{ fill: red; } .oppertunity_cost{ fill: orange; } .a_bar{ fill: white; font-weight: bold; } .sum_line{ fill: blue; } .slider.slider-vertical{ height: 170px!important; } </style>
+
+<script type="text/javascript" src="https://countingcalculi-assets.s3.amazonaws.com/vendor/bootstrap-slider/bootstrap-slider.js"></script> <link rel="stylesheet" href="https://countingcalculi-assets.s3.amazonaws.com/vendor/bootstrap-slider/bootstrap-slider.css"> <script src="https://countingcalculi-assets.s3.amazonaws.com/vendor/d3.v3.min.js"></script> <script src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/speed_of_light.js"></script>
+
+<p><em>Try out the interactive below!</em></p>
+
+<p>According to Einstein's <a target="_blank"href="http://www.dummies.com/how-to/content/einsteins-special-relativity.html">theory of relativity</a>, the <a target="_blank"href="https://en.wikipedia.org/wiki/Speed_of_light">speed of light</a> is the fastest speed that any object can travel in this universe. It is the universal speed limit. This may seem odd. Why would our universe have a speed limit and why does light <strong>always</strong> travel at the speed limit?</p>
+
+<p>This oddity of the universe doesn't seem so odd once you think of mass<sup class="footnote" id="fnsup1"><a href="#fn1">1</a></sup> as resistance to acceleration.<sup class="footnote" id="fnsup2"><a href="#fn2">2</a></sup> Since <a target="_blank"href="http://www.desy.de/user/projects/Physics/Relativity/SR/light_mass.html">light has no mass</a> there's nothing to resist its acceleration - nothing to slow it down. Without anything to slow it down, it's always going as fast as possible, which just happens to be about 670 million miles per hour in our universe. Since light always travels at this maximum speed we call it "The speed of light".</p>
+
+<p>If it seems counterintuitive to think of mass as resistance to acceleration, imagine that we are in outer space<sup class="footnote" id="fnsup3"><a href="#fn3">3</a></sup> and we have a ball with a lot of mass like a bowling ball. We push on this bowling ball with force F (nine <a target="_blank"href="https://en.wikipedia.org/wiki/Newton_%28unit%29">Newtons</a> in the interactive below) for two seconds until it reaches its final speed, Vbowlingball.</p>
+
+<p>Now imagine we have a ball with less mass, like a basketball. We push on the basketball with the same force for two seconds until it reaches its final speed, V<sub>basketball</sub>. Because this ball has less mass, intuitively its final speed is greater than that of the bowling ball. </p>
+
+<p>V<sub>basketball</sub> &gt; V<sub>bowlingball</sub></p>
+
+<p>Now imagine that we have a completely massless ball. Because this ball has no mass there is nothing to resist the force of our push so the ball zooms off as fast as universally possible. In our universe as fast as possible just happens to be 670 million miles per hour, or what physicists call the constant <em>C</em>.<sup class="footnote" id="fnsup4"><a href="#fn4">4</a></sup></p>
+
+<p>See for yourself in the interactive below. Vary the mass of the ball and see what happens to its final speed.</p>
+
+<div class='row' style="padding-top: 20px;"> <div class='col-xs-6 text-center'> <button ga-event="true" ga-category="Visualizations" ga-action="Interaction" ga-label="Effect of Mass on Speed Demo" class='btn btn-success' type="button" id='start'>Start</button> </div> <div class='col-xs-6 text-center'> <button ga-event="true" ga-category="Visualizations" ga-action="Interaction" ga-label="Effect of Mass on Speed Demo" class='btn btn-danger' type="button" id='reset'>Reset</button> </div> </div> <div class='row'> <div class='col-xs-2 col-sm-1 text-center'> <h4></h4> </div> <div class='col-xs-10 col-sm-11 text-center'> <h3>Effect of Mass on Speed Demo</h3> </div> </div> <div class='row'> <div class='col-xs-2 col-sm-1 text-center'> <input ga-event="true" ga-category="Visualizations" ga-action="Interaction" ga-label="Effect of Mass on Speed Demo" id="mass" class='slider' type="text" /> </div> <div class='col-xs-10 col-sm-11' id='demo_column'> <div id="demo"></div> </div> </div> <div class='row' style="padding-top: 20px;"> <div class='col-xs-12' id='graph_column'> <div id="graph"></div> </div> </div> </div>
+
+<p>The above example follows directly from <a target="_blank"href="http://www.biography.com/people/isaac-newton-9422656">Isaac Newton's</a> famous equation <em><a target="_blank"href="https://en.wikipedia.org/wiki/Newton%27s_laws_of_motion">Force = Mass x Acceleration</a></em>. Solving for acceleration we get <em>Force &divide Mass = Acceleration</em> or <em>F &divide M = A</em> for short. </p>
+
+<p>So the force of our push divided by the mass of the bowling ball equals the acceleration of the bowling ball.</p>
+
+<p><em>F &divide M<sub>bowlingball</sub> = A<sub>bowlingball</sub></em></p>
+
+<p>And the force of our push divided by the mass of the basketball equals the acceleration of the basketball.</p>
+
+<p><em>F &divide M<sub>basketball</sub> = A<sub>basketball</sub></em></p>
+
+<p>However the massless ball has zero mass. The force of our push is divided by zero and anything divided by zero equals infinity. </p>
+
+<p><em>F &divide 0 = Infinity</em></p>
+
+<p>The acceleration of the massless ball is infinite which means it reaches infinite speed instantaneously. So really the speed of light is an infinite speed.</p>
+
+<p>But wait. Is the speed of light a finite maximum speed (670 million miles per hour) or an infinite speed? That's what's interesting about Einstein's theory of relativity. He says that it's both. How can a speed both be finite and infinite?</p>
+
+<p>Relativity states that light moves at 670 miles per hour <strong><em>relative</em> to any other object</strong>. So from our point of view the light moves at 670 miles per hour. But <strong><em>relative </em> to itself</strong>, i.e. from the light's point of view, it moves instantaneously from start to finish. Interestingly, Einstein came up with his theory of relativity by imagining the universe <a target="_blank"href="http://www.pitt.edu/~jdnorton/Goodies/Chasing_the_light/">from the point of view of a photon</a>.<sup class="footnote" id="fnsup5"><a href="#fn5">5</a></sup> In other words he thought if you were a <a target="_blank"href="https://en.wikipedia.org/wiki/Photon">photon</a>, from your point of view, you could move from one end of the universe to the other instantaneously.<sup class="footnote" id="fnsup6"><a href="#fn6">6</a></sup> Instantaneously is just another way of saying "with infinite speed". So light moves at a finite maximum speed of 670 miles per hour, unless you <em>are</em> the light, in which case you teleport instantly to your final destination. Thus the speed of light is both finite and infinite.</p>
+
+<p>Of course, the speed of light as the universal speed limit is based on Newtonian and Einsteinian physics. Modern quantum mechanics may prove this theory wrong someday.<sup class="footnote" id="fnsup7"><a href="#fn7">7</a></sup> But whatever replaces Einstein's theory will probably be even weirder than a finite, infinite, universal speed limit.<sup class="footnote" id="fnsup8"><a href="#fn8">8</a></sup></p>
+
+<hr class='end-bar'  style="border-width: 3px;">
+
+<p><sup id="fn1">1. The amount of matter, or stuff, in a object <a href="#fnsup1">^</a></sup></p>
+
+<p><sup id="fn2">2. The change in speed of an object <a href="#fnsup2">^</a></sup></p>
+
+<p><sup id="fn3">3. So there's no air resistance, gravity, etc. <a href="#fnsup3">^</a></sup></p>
+
+<p><sup id="fn4">4. Why 670 million miles per hour? There's no good reason. It's a <a href="https://en.wikipedia.org/wiki/Physical_constant">universal constant</a>. God, or whatever, created it that way. <a href="#fnsup4">^</a></sup></p>
+
+<p><sup id="fn5">5. A photon is just a bit of light <a href="#fnsup5">^</a></sup></p>
+
+<p><sup id="fn6">6. About <a href="https://www.wolframalpha.com/input/?i=5.35%C3%9710%5E23+miles&amp;lk=1">535,000,000,000,000,000,000,000</a> miles. <a href="#fnsup6">^</a></sup></p>
+
+<p><sup id="fn7">7. So there's hope for those of us waiting on the <a href="http://starwars.wikia.com/wiki/Hyperdrive">hyperdrive</a> to zip around the universe, fighting an evil Galactic Empire. <a href="#fnsup7">^</a></sup></p>
+
+<p><sup id="fn8">8. If you're interested in a real mind-bender, look at <a href="https://en.wikipedia.org/wiki/Quantum_entanglement">quantum entanglement</a>. <a href="#fnsup8">^</a></sup></p>

@@ -1,0 +1,209 @@
+
+<script src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/vendor/simple-statistics.min.js"></script>
+
+
+<script src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/vendor/d3.v3.min.js"></script>
+<script src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/vendor/d3-tip.js"></script>
+<script src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/vendor/moment.js"></script>
+<script src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/vendor/jquery.color.js"></script>
+<script src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/vendor/jquery.color.svg-names.js"></script>
+<script src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/vendor/graphing_functions.js"></script>
+<link rel="stylesheet" href="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/vendor/graph_styles.css">
+
+<link rel="stylesheet" href="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/presidential_qualifications.css">
+<script type="text/javascript" src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/data.js"></script>
+<script type="text/javascript" src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/experience_curve.js"></script>
+<script type="text/javascript" src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/points_table.js"></script>
+<script type="text/javascript" src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/experience_graph.js"></script>
+<script type="text/javascript" src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/rankings_graph.js"></script>
+<script type="text/javascript" src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/presidential_qualifications.js"></script>
+<script type="text/javascript">
+$(window).load(function () {
+
+    $(document).ready(function () {
+        
+        //Create the points table
+        var Points_per_Position_user = jQuery.extend(true, {}, Points_per_Position_default);
+        
+        //Create candidate list from data
+        candidate_list = [];
+        for (i=0; i<candidates_data.length; i++){
+            candidate_data = candidates_data[i];
+            candidate = new candidate_class(name=candidate_data.name, id=i, group=candidate_data.group, experience=candidate_data.experience,
+                                            administration_start=candidate_data.administration_start, administration_end=candidate_data.administration_end,
+                                            administration_length=candidate_data.administration_length, executive_score=candidate_data.executive_score,
+                                            domestic_score=candidate_data.domestic_score, combined_overall=candidate_data.combined_overall,
+                                            foreign_policy_score=candidate_data.foriegn_policy_score)
+            candidate.init_data();
+            candidate.calculate_experience_points(Points_per_Position_default);
+            candidate_list.push(candidate)
+        }
+        candidate_list.sort(function(x, y){
+            return d3.ascending(x.administration_start, y.administration_start);
+        })
+        //HACKy to do this here
+        candidate_list.forEach(function(candidate, i){
+            candidate.id = i+1;
+        });
+        
+        var experience_graph = new experience_graph_class(the_data=candidate_list, graph_container_id='experience_graph', title_text='Presidential Experience', graph_slug='Presidential_Experience', controls_enabled=true, fixed_height=false);
+        var candidate_list_wo_2016 = candidate_list.filter(function(d) { return d.Group != "Candidates 2016"; });
+        var ranking_per_experience_graph = new rankings_per_experience_graph_class(the_data=candidate_list_wo_2016, graph_container_id='ranking_per_experience_graph', title_text='Presidential Success per Experience', graph_slug='Ranking_per_Experience', controls_enabled=true, fixed_height=false);
+        var points_table = new points_table_class(default_points=Points_per_Position_default, your_points=Points_per_Position_user, experience_graph=experience_graph, rankings_graph=ranking_per_experience_graph, graph_container_id='points_table', title_text='Points per Position', slug='Points_per_Position_default');
+        points_table.create();
+        experience_graph.draw();
+        ranking_per_experience_graph.draw();
+        ranking_per_experience_graph.exclude_lincoln.trigger("click");
+        
+        var experience_graph2 = new experience_graph_class(the_data=candidate_list, graph_container_id='experience_graph2', title_text='Presidential Experience', graph_slug='Presidential_Experience', controls_enabled=false, fixed_height=false);
+        experience_graph2.draw()
+        experience_graph2.toggle_order();
+        
+        
+        var ranking_per_experience_graph2 = new rankings_per_experience_graph_class(the_data=candidate_list_wo_2016, graph_container_id='ranking_per_experience_graph2', title_text='Presidential Success per Experience', graph_slug='Ranking_per_Experience', controls_enabled=true, fixed_height=false);
+        ranking_per_experience_graph2.draw()
+        
+    });
+});
+
+</script>
+
+<blockquote>
+    <p>"The process of election affords a moral certainty, that the office of President will never fall to the lot of any man who is not in an eminent degree endowed with the requisite qualifications." <br>
+    - Alexander Hamilton, <em><a target='_blank' href="https://app.owlandscroll.com/annotation/tqMdhlZltWcfDAtkdUdf">Federalist Number 68</a></em></p>
+</blockquote>
+
+<p>Imagine that you sit on the board of directors for a large Fortune 500 company like General Electric and it falls to you to select a new CEO. This person will be responsible for not just your personal wealth but the success of a business that employs millions of people and provides electricity and other services to millions more. What factors will you consider while selecting someone for this gigantic responsibility? You might consider a candidate's vision for the company, or her relationships with her colleagues, or his specific skills like negotiation or public speaking. But mainly, you will consider the candidate's relevant experience. </p>
+
+<p>Why? For one thing, a candidate's previous experience is one of the few things you can measure objectively. You don't know that their grand strategic vision will work, but you do know their track record of success on previous projects. For another, it takes time to acquire the skills and knowledge relevant to your company's field. For GE you likely want someone with skills in manufacturing or electrical power, but for JP Morgan you want someone with financial knowledge. Finally, and maybe most importantly, an experienced candidate is less risky. Even a good CEO cannot ensure the ultimate success of GE<sup class="footnote" id="fnsup1"><a href="#fn1">1</a></sup>,but an incompetent one can guarantee its collapse. An experienced candidate is less likely to make catastrophic mistakes and will, at least, maintain the status quo.</p>
+
+<p>The executive branch of the United States federal government is similar to a Fortune 500 company. It's a large bureaucracy that takes administrative skill and field-specific knowledge just to maintain the status quo. And its chief executive, the president, makes decisions every day, that affect the lives of not just millions but billions of people across the world. But unlike a board of directors selecting a CEO, when the American people vote for a president, they often say they want an outsider, someone uncorrupted by Washington, which is by definition someone without federal government experience or knowledge. So voters don't just undervalue experience in a candidate, they consider it an actual detriment. But what if we thought about picking a president more like hiring a CEO - the CEO of America?</p>
+
+<p>To do so, we will determine the experience of our candidates based on the previous positions they have held, much like a board of directors evaluates the resumes of prospective CEOs. To evaluate a candidate's experience objectively and to avoid creating post-hoc justifications for our favorite candidate, I have selected 22 positions commonly held by candidates running for president throughout history. For each of these positions, I have assigned a maximum point value. Essentially, what we want is someone who can walk into the Oval Office on day one and know what to expect when he or she sits in the chair.  Since you may disagree with my point assignments, you can assign your own as well.</p>
+
+<div class='row'>
+    <div class='col-xs-12 table_column'>
+        <p id='points_table_controls' class='controls text-center'>
+            <button ga-event="true" ga-category="Visualizations" ga-action="Interaction" ga-label="Presidential Experience and Success - Table" class='btn btn-primary' type="button" id="toggle_default"  >Switch to Default Points</button>
+        </p>
+        <div class="graph_title">Maximum Points per Position</div>
+        <div id='points_table' ></div>
+    </div>
+</div>
+<p class='text-center'>
+    <a href="#fn2">Note 2</a>, <a href="#fn3">Note 3</a>
+</p>
+
+<p>Because the presidency is first and foremost an executive of a large government bureaucracy, I have assigned the most points to positions at the helm of other large government bureaucracies, namely the cabinet level positions. While the president cannot drastically improve the economy and rarely gets more than a handful of domestic reforms through, he is, as Alexander Hamilton said, the "organ of intercourse between the Nation and foreign Nations" and in the words of Abraham Lincoln <a href="https://app.owlandscroll.com/annotation/KwAi2p27ppGPgpDNGRGv" target="_blank">"clothed with immense power"</a> as commander in chief, so I have granted significant points to positions involved in foreign policy and military matters. Most of the remaining points come from positions with significant government experience like governors, senators and congressmen. I have also granted some points to military experience below the general/admiral level and to close relatives of the president because they understand the military or have seen the pressures of the presidency first hand.</p>
+
+<p>We will also need to account for how long the candidate held each position. Someone who is vice-president for a day should not get the same points as someone who was Veep for eight years. To model the experience a candidate gains over time we will use the below <a target='_blank'href="https://en.wikipedia.org/wiki/Sigmoid_function">Sigmoid curve</a> commonly used to model a <a target='_blank'href="https://en.wikipedia.org/wiki/Learning_curve">learning curve</a>. </p>
+
+<div class='row'>
+    <div class='col-sm-2 hidden-xs'></div>
+    <div class='col-xs-12 col-sm-6 graph_column'>
+        <div class="graph" id='experience_curve'></div>
+    </div>
+</div>
+
+<p>The Sigmoid curve above assumes that a candidate learns a lot from his first day on the job, continues learning slowly for the next two years, learns quickly for the next six years, and has learned pretty much everything after eight years on the job. For instance, someone who has been president for one day will get 5% or 10 of the maximum 200 experience points assigned to the position of president. After two years they will get 17%, after eight years 95%, and after 10 years the full 200 points.<sup class="footnote" id="fnsup4"><a href="#fn4">4</a></sup></p>
+
+<p>I have researched all the positions held by each of the former presidents<sup class="footnote" id="fnsup5"><a href="#fn5">5</a></sup> and the 2016 candidates. You can find the raw data for each "candidate" <a target='_blank'href="https://drive.google.com/open?id=1fsZSTmrhj8f3jkFo3yXHg53XJ3Rk6oEFIdlPB9agg64">here</a>. Based on their years of experience in each position, the experience curve, and the points per position table, I have calculate total experience points for each candidate. I have grouped the candidates loosely by eras of the presidency.</p>
+
+<div class='row'>
+    <div class='col-xs-12  graph_column'>
+        <div class="controls text-center" id='experience_graph_controls'>
+            <button  ga-event="true" ga-category="Visualizations" ga-action="Interaction" ga-label="Presidential Experience and Success - Experience Graph" class="btn btn-primary" type="button" id="toggle_order">Sort by Total Points</button>
+        </div>
+        <div class="graph" id='experience_graph'></div>
+    </div>
+</div>
+
+<p>The founding fathers<sup class="footnote" id="fnsup6"><a href="#fn6">6</a></sup> are easily the most experienced group. In fact the five most qualified candidates are all founding fathers. That's not surprising since all of them served in at least one previous cabinet except Washington, who was the military supreme commander and de facto head of state for over eight years in the Revolutionary War. The framers of the constitution were highly distrustful of direct democracy and expected that the president would be selected by political elites similar to the idea of <a target="_blank" href="https://app.owlandscroll.com/annotation/OQEcU6n57YAb5tDyZ9ja">"filtration"</a> from David Hume's <a target='_blank'target='_blank'href="http://www.constitution.org/dh/perfcomw.htm">Idea of a Perfect Commonwealth</a>. Up through John Quincy Adams<sup class="footnote" id="fnsup7"><a href="#fn7">7</a></sup> this was largely how the president was selected. But the election of 1828 saw a paradigm shift in presidential elections. Ever since Andrew Jackson defeated the highly qualified John Quincy Adams the election for the highest office has become <a target='_blank'href="http://nymag.com/daily/intelligencer/2016/04/america-tyranny-donald-trump.html">more and more democratic</a>. And ever since then the presidents have been significantly less experienced.</p>
+
+<div class='row'>
+    <div class='col-xs-12 graph_column'>
+        <div class="graph" id='experience_graph2'></div>
+    </div>
+</div>
+
+<p>The most qualified candidate is James Monroe. Before becoming president he experienced battle in the American Revolutionary War, served as ambassador to England and France, was a member of the Continental Congress<sup class="footnote" id="fnsup8"><a href="#fn8">8</a></sup>, was a three term governor of Virginia, and in Madison's Administration he served as both Secretary of State and Secretary of War.<sup class="footnote" id="fnsup9"><a href="#fn9">9</a></sup> He was elected essentially unopposed in 1816 and 1820.</p>
+
+<p>Of course, the least qualified former president is Abraham Lincoln. Lincoln's only previous experience was as a one-term congressman before being elected to the presidency. This doesn't look good for our theory but we'll talk more about this shortly.</p>
+
+<p>The candidates of 2016 are about as qualified as the other groups since the founding fathers. Contrary to what <a target='_blank'href="https://www.youtube.com/watch?v=S9W0F2mz1jc">some have said</a>, Hillary Clinton is not the most qualified<sup class="footnote" id="fnsup10"><a href="#fn10">10</a></sup> candidate ever. In fact John Kasich and Bernie Sanders are not much less qualified. But she is the fourteenth most experienced candidate and the most experienced since George Herbert Walker Bush. Hillary was was first lady during her husband's administration, a senator from 2001 to 2009, and Secretary of State in Obama's administration from 2009 until 2013. You may not think she was <a target='_blank'href="https://en.wikipedia.org/wiki/2012_Benghazi_attack">a good Secretary of State</a> but for the sake of remaining objective we are not evaluating performance in these roles.</p>
+
+<p>If Marco Rubio or Ted Cruz would have been elected, they would be among the least qualified presidents. But Donald Trump would be the least qualified president ever. In fact, he has no relevant experience to recommend him for the office. Yes, he is the CEO of <a target='_blank'href="https://en.wikipedia.org/wiki/The_Trump_Organization">The Trump Organization</a> but that is a privately-held, comparatively small company. He is certainly a far cry from the founding fathers and not the sort of candidate the framers had in mind.</p>
+
+<p>But were the framers right? Should we care about experience? To test this theory, I've correlated the experience points of former presidents with their ultimate success as president. To measure their success, I took numbers from three studies of presidential rankings: the <a target='_blank'href="https://www.siena.edu/centers-institutes/siena-research-institute/social-cultural-polls/us-presidents-study/">Siena Institute's US Presidential Study</a>, the <a target='_blank'href="http://www.community-languages.org.uk/US-presidency-survey/results.htm">American Political Science Association</a>, and the <a target='_blank'href="http://www.community-languages.org.uk/US-presidency-survey/results.htm">United Kingdom Survey of US Presidents</a>. Each study asked multiple scholars from relevant fields to rate each president on specific attributes such as military skill, domestic leadership, and luck. The owners of the Siena survey, Dr. Tom Kelly and Dr. Doug Lonnstrom and the owner of the APSA survey, <a target='_blank'href="http://www.polsci.uh.edu/faculty/rottinghaus/rottinghaus.htm">Dr. Brandon Rottinghaus</a> were kind enough to send me their raw data and I've normalized the survey responses to a 100-point scale for each attribute. You can find the full list of raw and normalized data <a target='_blank'href="https://docs.google.com/spreadsheets/d/1fsZSTmrhj8f3jkFo3yXHg53XJ3Rk6oEFIdlPB9agg64/edit#gid=1869754996">here</a>.</p>
+
+<p>We want a measure of presidential effectiveness exclusive of whether or not we agree with the president's policies. So from the survey data I have created three measures of presidential effectiveness: an <strong>Executive Score</strong>, a <strong>Foreign Policy Score</strong>, and a <strong>Domestic Score</strong>. The <strong>Executive Score</strong> averages the Vision/agenda-setting, Party Leadership, Ability to Compromise, Executive Ability, Leadership and Avoids Critical Mistakes attributes. The <strong>Foreign Policy Score</strong> averages Diplomatic Skill, Military Skill, Foreign Policy Leadership, and Foreign Policy Accomplishments attributes. The <strong>Domestic Score</strong> averages the Legislative Skill, Domestic Leadership, Relationship with Congress, and Domestic Accomplishments attributes. I have chosen to ignore attributes like Luck, Integrity and Intelligence since they aren't ultimately part of a president's effectiveness.<sup class="footnote" id="fnsup11"><a href="#fn11">11</a></sup> I've also include the average of all attributes (including Luck, etc) in the <strong>Overall Score </strong> for comparison purposes.</p>
+
+<p>Here's what happens when we plot presidential quality vs experience and run a simple linear regression. </p>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="graph" id='ranking_per_experience_graph'></div>
+    </div>
+</div>
+
+<p>It's immediately obvious that Abraham Lincoln is <em>sui generis</em>. Although he is the least experienced former president, he is the highest ranked and only two other presidents, FDR and Washington, are even close. However, there are a few reason to treat Lincoln as an outlier in our study. While he was inexperienced, he was elected president before the advent of the popular primary, when when party bigwigs still selected their candidates, so he was filtered by political elites in a way that the current crop of candidates is not. Also, in times of war the president's role as commander in chief gives him "immense" power and probably makes him much more effective than he would be in times of peace. Finally, Lincoln was elected to office during the greatest crisis, so far, in our nation's history and thus had the opportunity to use his other political gifts. It would likely be impossible for someone elected in "good" times like the 1990's to attain such a high ranking. All this is not to say Lincoln is overrated. He saved the union and ended the scourge of slavery in America in four years. But we should be careful about attributing his success to his lack of Washington experience. </p>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="graph" id='ranking_per_experience_graph2'></div>
+    </div>
+</div>
+
+<p>When we exclude Lincoln from the linear regression its R2 value, <em>i.e.</em> the strength of the correlation between experience and presidential success, increases from 0.0051 up to 0.025. If we look at just the <strong>Foreign Policy Score</strong>, the relationship is a little stronger, 0.031, probably because no field outside of federal politics provides foreign policy training.<sup class="footnote" id="fnsup12"><a href="#fn12">12</a></sup> Although 0.025 is not a super strong correlation, there is still a significant relationship between the success of a president and his experience.</p>
+
+<p>So why is experience not more correlated with success? For one thing the effectiveness of a president probably has a lot to do with united or divided government, ie when the Congress is controlled by a different party than the presidency, regardless of the president's experience. Also other factors like the <a target='_blank'href="http://www.acsu.buffalo.edu/~jcampbel/documents/SimontonPresIQ2006.pdf#page=7">intelligence</a>, moral fortitude, and charisma are obviously incredibly important for the presidency.</p>
+
+<p>Despite its weaknesses, we should still put stock in qualifications and experience. For one thing experience is one of the few things we can judge objectively when electing a candidate to the presidency. We don't really know what Hillary Clinton is like in private but, if Al Gore is right, that <a target='_blank'href="http://www.slate.com/articles/news_and_politics/politics/features/2012/how_to_measure_a_president_/what_qualities_should_we_look_for_in_our_presidents_.html">the election is a long interview</a>, then a candidate's experience is their resume. In <a target='_blank'href="https://app.owlandscroll.com/annotation/Aj635R8NkbH1w4xz6PdU"><em>Thinking Fast and Slow</em></a> Daniel Kahneman notes that because of a <a target='_blank'href="http://www.wikinvest.com/wiki/Recency_bias">recency bias</a> most companies overvalue the interview where charm and luck play such a large role, compared to the resume, that a prospective employee has spent a lifetime building. Focusing on a candidate's experience will make us less likely to pick someone because they are "likable". </p>
+
+<p>Another reason to consider qualifications is that it places a floor on how badly a candidate can screw up. When people get excited about a candidate, it is often because he or she promises a <a target='_blank'href="https://berniesanders.com/stream/">political revolution</a>. However as evidenced by the French Revolution, the Bolshevik revolution and the Arab Spring, revolutions rarely turn out well.<sup class="footnote" id="fnsup13"><a href="#fn13">13</a></sup> The first job of a president is to avoid catastrophic mistakes, to keep the world spinning and allow incremental improvements to fix problems. An experienced president is more likely to understand the limits of power and not destroy the foundations of American success by overreaching.</p>
+
+<p>Finally the world today is much more complex, albeit <a target='_blank'href="http://www.countingcalculi.com/book_reviews/the_past_present_and_future_of_violence/#rn2">drastically improved</a>, than the ones in which most of the former presidents held power. While the wonders of the modern economy have drastically improved our quality of life, it has also created an incredibly interconnected, complex web of finance, of which the executive branch of the federal government is now an integral part. Simplistic solutions like trade wars can destroy not just our economy but that of the entire world.</p>
+
+<p>Furthermore, the president is now the commander-in-chief of the American military, <a target='_blank'href="http://www.economist.com/news/united-states/21601535-no-other-country-comes-close-americas-hard-power-its-lead-slipping-unrivalled">the most powerful</a>, by many orders of magnitude, the world has ever seen. And we no longer face the armies of nation-states but terrorist attacks that seem tailor made to upend our libertarian institutions. To resist them, we need a president that will use appropriate force when necessary but won't overreact after an attack.<sup class="footnote" id="fnsup14"><a href="#fn14">14</a></sup></p>
+
+<p>And of course presidents today have access to nuclear weapons. According the studies above, George W. Bush was the worst president in the nuclear era, largely because of the Iraq and Afghan wars. The <a target='_blank'href="http://icasualties.org/">total American deaths in Iraq and Afghanistan</a> was 6,883. In a nuclear war, the total estimated dead in America alone would be at least <a target='_blank'href="https://en.wikipedia.org/wiki/Nuclear_holocaust#Effects_of_nuclear_war">70 million</a>. A qualified candidate approved by her peers and beholden to people through elections is unlikely to launch an unnecessary nuclear strike. Placing that awesome power in hands of an untested man is a dangerous proposition.</p>
+
+<p>Finally, we should consider experience because the alternatives ways of picking a president are not any better. The <a target='_blank'href="http://www.nytimes.com/2016/05/23/opinion/campaign-stops/do-sanders-supporters-favor-his-policies.html?_r=0">folk theory of democracy</a> holds that voters support the candidate whose views align best with their own. But if elected, the candidate's views will have to be turned into actionable policies, and that takes experience. I'm not suggesting that die-hard liberals should have voted for John McCain because he was more experienced. But in the primary you might consider voting for Hillary Clinton even if you align more with the policies of Bernie Sanders. </p>
+
+<p>Furthermore, we do not elect views to office. We elect men and women. And those men and women will have to make decisions that neither you nor I are qualified to make. So even if a candidate aligns perfectly with our views, we should not be so confident in our views as to assume that they will be correct for all the issues facing a president. As Alexander Hamilton says in Federalist 71, when <a target="_blank" href="https://app.owlandscroll.com/annotation/l6NRoj7vLpFcXN38HzMn">"the interests of the people are at variance with their inclinations, it is the duty of the persons whom they have appointed to be the guardians of those interests, to withstand the temporary delusion"</a>.</p>
+
+<p>While other attributes like moral character and integrity do matter tremendously in a president, the fact is we have very limited information about the moral character or integrity of politicians running for office. Probably no one knew the depth of Nixon's moral decrepitude before Watergate. It's too tempting to imagine flaws in unlikable candidates and overlook those of likable candidates to rely on these measures. Ultimately we are relying heavily on likability and likability may be one the worst ways to pick a president.</p>
+
+<p>So while not perfect, experience is still an important part of selecting a president. At least, it should not be considered a detriment as the supporters of outsiders treat it. Hillary Clinton is objectively more qualified to run the country than Donald Trump. At the very least she will avoid catastrophic mistakes and maintain the status quo, giving the American people enough time to fix the economy and other issues through incremental improvements. She knows the pressure the president has to face and will not <a target='_blank'href="http://www.nytimes.com/interactive/2016/us/elections/donald-trump-on-the-issues.html?inline=nyt-per">overreact to a terrorist attack</a> or <a target='_blank'href="https://www.washingtonpost.com/news/monkey-cage/wp/2016/04/06/should-more-countries-have-nuclear-weapons-donald-trump-thinks-so/">make light of of nuclear weapons</a>. She may not be an exciting candidate. She promises <a target='_blank'href="https://www.amazon.com/Hard-Choices-Hillary-Rodham-Clinton-ebook/dp/B00C69EP1S/ref=tmm_kin_swatch_0?_encoding=UTF8&amp;qid=&amp;sr=">no easy solutions</a> and will not usher in a revolution. But I, for one, do not want a revolution.</p>
+
+<p>There are many reasons why Donald Trump should not be president. According to <a target='_blank'href="https://www.youtube.com/watch?v=0xd3kr-QpeM">Mitt Romney</a>, he's not smart or a good businessman and if we choose him, "…the prospects for a safe and prosperous future are greatly diminished". He has no realistic or principled stance on any issues. Most importantly, he is morally bankrupt. He would also be the least qualified president in history. For all these reasons and more, when the American people vote in November, they should send one of the most qualified women in history to the world's highest office. Donald Trump should be disqualified.</p>
+
+<hr class='end-bar' style="border-width: 3px;">
+
+<p><sup id="fn1">1. Daniel Kahneman in <em><a target='_blank'href="https://app.owlandscroll.com/annotation/7BFEXt9c8bbJFB57y8rb">Thinking Fast and Slow</a></em> estimates that the correlation between a good CEO and the success of a firm is 0.3 or a mere 10% edge over a replacement-level CEO<a href="#fnsup1">^</a></sup></p>
+
+<p><sup id="fn2">2. Military Supreme Commander means the highest ranking generals and admirals in a time of war - namely <a target='_blank'href="https://en.wikipedia.org/wiki/George_Washington">George Washington</a>, <a target='_blank'href="https://en.wikipedia.org/wiki/Winfield_Scott">Winfield Scott</a>, <a target='_blank'href="https://en.wikipedia.org/wiki/Ulysses_S._Grant">Ulysses S. Grant</a>, <a target='_blank'href="https://en.wikipedia.org/wiki/John_J._Pershing">John J. Pershing</a>, and the <a target='_blank'href="https://en.wikipedia.org/wiki/Five-star_rank#US_five-star_ranks">five star generals and admirals in WWII</a> <a href="#fnsup2">^</a></sup></p>
+
+<p><sup id="fn3">3. I'm only counting CEOs of <a target='_blank'href="http://fortune.com/fortune500/">Fortune 500 companies</a>, not CEOs of startups or small and medium size companies <a href="#fnsup3">^</a></sup></p>
+
+<p><sup id="fn4">4. This means you should almost always vote for incumbent based on experience. Probably no one except current and former presidents understand the immense responsibility so at the very least we might be better off sticking with the devil we know. It also means the <a target='_blank'href="https://en.wikipedia.org/wiki/Twenty-second_Amendment_to_the_United_States_Constitution">22nd amendment</a> was probably a mistake. <a href="#fnsup4">^</a></sup></p>
+
+<p><sup id="fn5">5. Before they became president <a href="#fnsup5">^</a></sup></p>
+
+<p><sup id="fn6">6. I've included John Quincy Adams in this group even though he is not often considered a founding father because he fits more with this era of the presidency than the next <a href="#fnsup6">^</a></sup></p>
+
+<p><sup id="fn7">7. Hence the electoral college <a href="#fnsup7">^</a></sup></p>
+
+<p><sup id="fn8">8. Counted as a Senator for our purposes <a href="#fnsup8">^</a></sup></p>
+
+<p><sup id="fn9">9. Counted as Secretary of Defense here. <a href="#fnsup9">^</a></sup></p>
+
+<p><sup id="fn10">10. For the purposes of this study I am using qualified and experienced as synonyms. <a target='_blank'href="https://www.washingtonpost.com/blogs/plum-line/wp/2016/04/07/sanders-rips-clinton-as-not-qualified-and-the-dem-race-goes-nuclear/?tid=a_inl">As Bernie Sander</a> pointed out they are not always. <a href="#fnsup10">^</a></sup></p>
+
+<p><sup id="fn11">11. This survey data is far from perfect. The scholars probably overrate memorable presidents like Kennedy and confound different attributes like Nixon's foreign policy success and his morally abhorrent behavior. They also are mostly academics, and thus a little left leaning. <a href="#fnsup11">^</a></sup></p>
+
+<p><sup id="fn12">12. Benjamin Disraeli - <a target='_blank' href="https://en.wikiquote.org/wiki/Benjamin_Disraeli">"The world is weary of statesmen whom democracy has degraded into politicians"</a> <a href="#fnsup12">^</a></sup></p>
+
+<p><sup id="fn13">13. Robert Gates in his book <a target='_blank' href="https://app.owlandscroll.com/annotation/zg0rxbGPJOYjPU1NY2ht"><em>Duty: Memoirs of a Secretary at War</em></a> says that the only reason the American Revolution turned out well was because of George Washington.<a href="#fnsup13">^</a></sup></p>
+
+<p><sup id="fn14">14. It’s a very small sample size, but the strength of the relationship between experience and the Foreign Policy Scores of the Modern Presidents is a much stronger 0.33, or about the same as the quality of a CEO and the success of a firm in Kahneman’s study.</sup><sup><a href="#fnsup14">^</a></sup></p>

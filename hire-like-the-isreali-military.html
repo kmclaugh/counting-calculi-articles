@@ -1,0 +1,337 @@
+<script src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/vendor/simple-statistics.min.js"></script>
+        
+        
+<script src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/vendor/d3.v3.min.js"></script>
+<script src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/vendor/d3-tip.js"></script>
+<script src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/vendor/moment.js"></script>
+<script src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/vendor/jquery.color.js"></script>
+<script src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/vendor/jquery.color.svg-names.js"></script>
+<script src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/vendor/graphing_functions.js"></script>
+<link rel="stylesheet" href="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/vendor/graph_styles.css">
+
+<link rel="stylesheet" href="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/smart_hiring/smart_hiring.css">
+<script type="text/javascript" src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/smart_hiring/data.js"></script>
+<script type="text/javascript" src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/smart_hiring/candidate_scores.js"></script>
+<script type="text/javascript" src="https://s3.amazonaws.com/countingcalculi-assets/vendor/D3_Graphs/smart_hiring/resume_v_final.js"></script>
+<script type="text/javascript">
+	$(window).load(function () {
+
+		$(document).ready(function () {
+			
+			//Resume scores graph
+			var resumeScoresGraph = new candidate_scores_graph_class(candidateData, 'resume_scores', 'Resume Scores', 'resume_scores', false, false);
+			resumeScoresGraph.draw();
+			//Hide interview
+			toggle_class($('#'+resumeScoresGraph.graph_container_id+' circle.interviewScore'), 'visible_false');
+			resumeScoresGraph.showInterview = !resumeScoresGraph.showInterview;
+			resumeScoresGraph.updateData();
+			//Hide final
+			toggle_class($('#'+resumeScoresGraph.graph_container_id+' circle.finalScore'), 'visible_false');
+			resumeScoresGraph.showFinal = !resumeScoresGraph.showFinal;
+			resumeScoresGraph.updateData();
+			
+			//Interview scores graph
+			var interviewScoresGraph = new candidate_scores_graph_class(candidateData, 'interview_scores', 'Interview Scores', 'interview_scores', false, false);
+			interviewScoresGraph.draw();
+			//Hide resume
+			toggle_class($('#'+interviewScoresGraph.graph_container_id+' circle.resumeScore'), 'visible_false');
+			interviewScoresGraph.showResume = !resumeScoresGraph.showResume;
+			interviewScoresGraph.updateData();
+			//Hide final
+			toggle_class($('#'+interviewScoresGraph.graph_container_id+' circle.finalScore'), 'visible_false');
+			interviewScoresGraph.showFinal = !interviewScoresGraph.showFinal;
+			interviewScoresGraph.updateData();
+			
+			//Final scores graph
+			var finalScoresGraph = new candidate_scores_graph_class(candidateData, 'final_scores', 'Final Scores', 'final_scores', true, false);
+			finalScoresGraph.draw();
+			
+				
+			var resumeVFinalGraph = new resume_v_final_graph_class(candidateData, 'resume_v_final', 'Resume Score v Final Score', 'resume_v_final', true, false, true);
+			resumeVFinalGraph.draw();
+
+		});
+	});
+</script>
+
+<p>Recently I was tasked with hiring three software developers to join my team at work for a six-month project. I didn't have any previous experience hiring but based on what I've seen at my company and interviews I've had with other companies, here's what I'd typically do. I'd start by creating an exhaustive list of skills and traits for my future developer. Of course, any candidate for this position will need to be able to code in several languages. Naturally, they'll need experience with databases. Ideally, they'll have previous industry experience in silicon device manufacturing equipment. They'll need softer skills like leadership, teamwork, attention to detail, and organizational skills. And most importantly, they'll need to be "deeply dedicated" to building "robust code" and "insanely passionate" about "customer satisfaction".</p>
+<p>I'd finalize all these skills and requirements in a job description and send them to my HR department to start receiving resumes. While reviewing the resumes, I'd select the ones that list the most skills in common with my job description. I'd evaluate the resume formatting to determine if the candidate has good organizational skills. And I'd immediately throw out all resumes with spelling errors because that demonstrates a lack of attention to detail so critical to this position.</p>
+<p>During the interviews, panel of my colleagues and I would interrogate each candidate about their work experience. And just like good interrogators, we would closely look for subtle reactions from the candidate to divine the true nature of not only his ability but also his moral fiber.<br>
+After each interview, my colleagues and I would discuss our overall impressions of the candidate's performance.</p>
+<blockquote>
+<p><em>This candidate stumbled a little bit answering that heapsort question, so I'm worried about her ability to perform under pressure.</em><br>
+<em>That candidate, despite having a weaker resume, was so obviously passionate about his previous project that we'll definitely hire him.</em><br>
+<em>We're on the fence about an another candidate, so we'll want more resumes to review.</em></p>
+</blockquote>
+<p>After the discussion, we'd make a final hiring decision in the room.</p>
+<p>We've all experienced a hiring process like this from one side of the interview table or the other. As interviewees, more often than not, we probably leave the room feeling exhausted and misunderstood. But as interviewers, we're pretty confident that we can pick a strong candidate with such a rigorous trial.</p>
+<p>As interviewers, we are wrong - as <a target="_blank" href="http://www.businessinsider.com/how-google-hires-people-2013-6">Google discovered</a> when they evaluated their own hiring practices. After looking at "tens of thousands of interviews" Google found "zero relationship" between the interviewer's rating of a candidate and that candidate's ultimate performance at Google. In other words, hiring with a process like this isn't any better than random chance. You might as well shuffle resumes and pick the one on top.</p>
+<p>Why doesn't this work? Because a process like this relies heavily on our intuitions. By intuitions, I mean the <a target="_blank" href="https://en.wikipedia.org/wiki/Heuristics_in_judgment_and_decision-making">heuristics and biases</a> that we developed to help us solve problems in the wilderness where our brains evolved. While these intuitions work great in situations like tree climbing when we get quick feedback and have lots of chances to correct our errors, they are ill equipped to help us with the difficult task of selecting an employee from a large pool of candidates to perform a job for years based on a piece of paper and an hour long interview. What a typical interview really tests, according to the book <a target="_blank" href="https://www.amazon.com/Quiet-Power-Introverts-World-Talking/dp/0307352153/?tag=kevinmclaughl-20"><em>Quiet: The Power of Introverts in a World That Can't Stop Talking</em></a>, is whether the candidate is an extrovert or an introvert. It allows us, the interviewers, to <a target="_blank" href="https://en.wikipedia.org/wiki/Attribute_substitution">substitute</a> the candidate's confidence for their intelligence, their likability for their ability. <sup class="footnote" id="fnsup1"><a href="#fn1">1</a></sup></p>
+<p>So should we just shuffle the resumes or are there better ways to evaluate candidates? Industrial-Organizational psychologists suggest behavioral-based interviews. As <a target="_blank" href="http://www.thewisdomthatworks.com/our-people/kathryn-keeton-bio/">Dr Kathryn Keeton</a> of <a target="_blank" href="http://www.thewisdomthatworks.com/">Minerva Work Solutions</a>, an IO psychology consultancy, explained to me:</p>
+<p>
+	<blockquote>
+		"There are essentially two ways to do behavioral-based interviews- one in which you ask the candidate to describe situations in which they exhibited certain behaviors (eg tell me about a time in which you dealt with a conflict at work- how did you handle it); the other asks the candidate what they would do in certain situations (eg if this situation happened what would you do)."
+	</blockquote>
+</p>
+
+<p>Behavioral interviews are the intellectual descendants of <a target="_blank" href="https://en.wikipedia.org/wiki/Daniel_Kahneman">Daniel Kahneman</a>, a Founding Father of cognitive heuristics. In his book <a target="_blank" href="https://app.owlandscroll.com/annotation/spJoG09Lraip9bRfgs6q"><em>Thinking Fast and Slow</em></a> he describes how, at the age of 21, he was tasked with finding a way to evaluate candidates for combat duty in the Israeli military.</p>
+<p>Before Kahneman, the military evaluated candidates based only on a single interviewer's holistic impression after a 20-minute interview. And just like the hiring process described above, these holistic impressions had no correlation with a candidate's eventual success in combat.</p>
+<p>Kahneman, based on <a target="_blank" href="https://en.wikipedia.org/wiki/Paul_E._Meehl">Paul E. Meehl's</a> book <a target="_blank" href="https://www.amazon.com/Clinical-Versus-Statistical-Prediction-Theoretical/dp/0963878492/?tag=kevinmclaughl-20"><em>Clinical Versus Statistical Prediction</em></a>, believed he could more effectively predict candidates' success by scoring them on independent, specific, objective tests. To do so he created a simple set of questions to evaluate traits relevant to combat duty like responsibility, sociability, and masculine pride. <sup class="footnote" id="fnsup2"><a href="#fn2">2</a></sup> The interviewers only had to mechanically score the answers to these questions during the interviews. Kahneman then created an algorithm to weight these trait-scores to determine the final overall score for each candidate. As you might have guessed, Kahneman's algorithmic evaluation of the candidates was more correlated with success in combat than the holistic impressions.</p>
+<p>But the algorithmic evaluation was only part of the story. Kahneman's interviewers were frustrated at being reduced to mechanical counters. They, like most people, believed their intuitions were very accurate. So as a sop to their egos, Kahneman asked them to close their eyes after each interview, imagine the candidate as a combat soldier and score a final, holistic impression on a scale of one to 10. Surprisingly, Kahneman found that these holistic scores, which were previously useless, were now just as predictive of success as his algorithm. Kahneman believes that the specific questions of his algorithm primed the interviewers to think more analytically about each candidate. This priming ultimately made their intuitive impressions more accurate.</p>
+<p>I decided to try Kahneman's process for hiring my three software developers. You can see the Excel file I used for my process <a target="_blank" href="https://docs.google.com/spreadsheets/d/1bSoy36VYPEOblb_g7QyiRzlFeGjpA9afe0mqQHngKKM/edit?usp=sharing">here</a>. To start with I created the job description. As per <a target="_blank" href="https://app.owlandscroll.com/annotation/lBpPEhZKDSb1OkmCNj3Y">Kahneman's recommendation</a>, I limited myself to six total skills - three <strong>Required</strong>, two <strong>Preferred</strong>, and one <strong>Nice-to-Have</strong>. I didn't require any education level or years of experience.</p>
+<p>I rated each skill on the resumes I received by two methods. First, I found where the skill ranked in the resume's list of skills. Since people tend to list their strongest skills first, I gave more points to skills ranked higher in the list according to the table below.</p>
+<p>
+	<table class='table text-center'>
+		<tr>
+			<th style="text-align: center;">Rank</th>
+			<th style="text-align: center;">Points</th>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>10</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>9</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>8</td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td>7</td>
+		</tr>
+		<tr>
+			<td>5</td>
+			<td>6</td>
+		</tr>
+		<tr>
+			<td>6</td>
+			<td>5</td>
+		</tr>
+		<tr>
+			<td>Greater than 7</td>
+			<td>5</td>
+		</tr>
+	</table>
+</p>
+<p>For instance, <a target="_blank" href="https://docs.google.com/document/d/1YXYZZBOKZxPAqei5k0Od7L4e3PFi7mD5WqWj52xPHkk/edit?usp=sharing">George</a><a target="_blank" href="https://docs.google.com/document/d/1YXYZZBOKZxPAqei5k0Od7L4e3PFi7mD5WqWj52xPHkk/edit?usp=sharing">'s</a><a target="_blank" href="https://docs.google.com/document/d/1YXYZZBOKZxPAqei5k0Od7L4e3PFi7mD5WqWj52xPHkk/edit?usp=sharing"> resume</a> ranks Python 4th in his skills list, so I would give him 7 points for Django. But if he ranked it 10th, I would give him 5 points.</p>
+<p>Second, I counted the number of projects or positions on the resume in which the candidate used the skill. I gave 2.5 points for each project up to a maximum of 10 points. For instance, George's resume lists 3 projects with Python, so I would give him 7.5 points. But if he listed 6 projects, I would give him 10 points.</p>
+<p>I then added the rank and project points together to get a final score for the given skill. Since George received 9 rank-points and 7.5 project-points for Django, his total Django skill-score is 16.5.</p>
+<p>I then weighted each individual skill-score by importance, multiplying <strong>Required</strong> skills by 10, <strong>Preferred</strong> skills by 5, and <strong>Nice-to-Have</strong> skills by 1. George would have the following weighted skill-scores.</p>
+<p>
+	<div class="table-responsive">
+		<table class='table table-striped text-center'>
+			<tr>
+				<th style="text-align: center;">Skill</th>
+				<th style="text-align: center;">Rank Score</th>
+				<th style="text-align: center;">Project Score</th>
+				<th style="text-align: center;">Raw Skill-Score</th>
+				<th style="text-align: center;">Skill Importance</th>
+				<th style="text-align: center;">Skill Weight</th>
+				<th style="text-align: center;">Weighted Skill-Score</th>
+			</tr>
+			<tr>
+				<td>Django</td>
+				<td>7</td>
+				<td>7.5</td>
+				<td>14.5</td>
+				<td>Required</td>
+				<td>10</td>
+				<td>145</td>
+			</tr>
+			<tr>
+				<td>Python</td>
+				<td>10</td>
+				<td>10</td>
+				<td>20</td>
+				<td>Required</td>
+				<td>10</td>
+				<td>200</td>
+			</tr>
+			<tr>
+				<td>SQL</td>
+				<td>5</td>
+				<td>10</td>
+				<td>15</td>
+				<td>Required</td>
+				<td>10</td>
+				<td>150</td>
+			</tr>
+			<tr>
+				<td>Javascript</td>
+				<td>5</td>
+				<td>7.5</td>
+				<td>12.5</td>
+				<td>Preferred</td>
+				<td>5</td>
+				<td>62.5</td>
+			</tr>
+			<tr>
+				<td>HTML</td>
+				<td>0</td>
+				<td>0</td>
+				<td>0</td>
+				<td>Preferred</td>
+				<td>5</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>Angular.js</td>
+				<td>5</td>
+				<td>2.5</td>
+				<td>7.5</td>
+				<td>Nice-to-Have</td>
+				<td>1</td>
+				<td>7.5</td>
+			</tr>
+			<tr>
+				<td>Raw Resume-Score</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>565</td>
+			</tr>
+			<tr>
+				<td>Normalized Resume-Score</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>69</td>
+			</tr>
+		</table>
+	</div>
+</p>
+<p>I then added the six weighted skill-scores to get the raw resume-score, in George's case 565. Finally, I normalized the resume-score such the that maximum possible score was 100 to make it easy for myself and others to understand. George's normalized resume-score is 69. In other words, he received 69% of the maximum score for his resume. Below is a graph of all scores for the resumes I received.</p>
+
+<p>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="graph" id='resume_scores'></div>
+		</div>
+	</div>
+	<div class='row'>
+		<div class="col-xs-12 text-center">
+			<a target='_blank' href='https://github.com/kmclaugh/D3_Graphs/tree/master/smart_hiring'>Graph Source Code</a>
+		</div>
+	</div>
+</p>
+
+<p>I invited candidates with high scoring resumes to an interview with myself and two developers from my team. I wanted every interviewee to perform their best <sup class="footnote" id="fnsup3"><a href="#fn3">3</a></sup> so to help them relax I first explained the project and asked them to talk about their previous experience.</p>
+<p>All developers on my team need to be able to translate a user's problem statement into a fully coded feature without much specific direction from me. They also have to work with the other developers to integrate their code into the entire application. For these softer-skills, I asked three specific behavioral questions of the interviewees:</p>
+<ol>
+<li>
+<p>Tell us about a time that you had to develop a new feature or improve an old one based only on a user's problem statement without a list of requirements.</p>
+</li>
+<li>
+<p>Pick one of the projects or positions on your resume and tell us how the team was organized and what your role within the team was.</p>
+</li>
+<li>
+<p>Tell us about a time when you had to work with another developer to either solve a problem with the existing code or develop a new feature.</p>
+</li>
+</ol>
+<p>My two team members and I scored the interviewees' answers to the questions on a scale of one to 10.</p>
+<p>Probably the biggest reason interviews fail to separate good employees from bad is that they really only test one skill - interviewing. But the candidate is not hired to be a professional interviewer. In my case, they are hired to code. While, as we saw from <em>Quiet</em>, interviews favor confident extroverts, coding typically favors thoughtful introverts.</p>
+<p>To avoid or at least mitigate this misalignment, I wanted the most important part of my interview to resemble the actual coding environment as closely as possible. So I developed a coding challenge. I asked the candidates to code a simple address book application to help a user keep track of his contacts. Here is the challenge as I read it to the candidates:</p>
+<blockquote>
+<p>Create a simple application based on the following problem statement from the user.<br>
+The user needs a simple address book to keep track of his contacts. At a minimum, he needs to be able to add, delete and view his contacts.<br>
+You will have a half an hour to code this application. You should try to solve the user's problem as best as possible. Feel free to add any features you think might be necessary beyond the user's requirements. Also feel free to use Google or any other resources while coding. We will view your application and let you explain to us how it works after you are done.</p>
+</blockquote>
+<p>I chose an address book because it's simple and easy to understand. Because I wanted to test how well the candidate could turn a user's problem statement into functioning code, I didn't provide any specifics about how the application should work. I encouraged the candidate to use Google or any other resources since Googling is an essential skill for programmers today. Finally, I didn't want candidates to feel like they had to explain their code as they went, since this isn't what they will actually do when coding in the real world.</p>
+<p>To grade the candidate's application, my team and I scored the following questions on a scale of one to 10.</p>
+<ol>
+<li>
+<p>Did the candidate solve the user's problem?</p>
+</li>
+<li>
+<p>Did the candidate add any hidden features the user did not request?</p>
+</li>
+<li>
+<p>Grade the candidate's code.</p>
+</li>
+<li>
+<p>Grade the candidate's User Interface.</p>
+</li>
+</ol>
+<p>Half an hour is not a very long time to code even a simple application, so most candidates did not finish. <sup class="footnote" id="fnsup4"><a href="#fn4">4</a></sup> Even so, this test was far and away the most valuable part of our interview. One candidate was a native Chinese speaker and thus struggled with the behavioral questions, but after watching him code, we knew we had found our man.</p>
+<p>Finally, based on Kahneman's example, I asked my team to close their eyes and imagine working with the candidate, then score their overall impression on a scale of one to 10.</p>
+<p>I created the final interview score by summing the average of my team's scores to the behavioral questions, coding challenge grades, and overall impression. Like the resume score, I normalized the raw interview score such that the maximum possible score was 100. Here are the final results of the interviews for each candidate (zero means they weren't interviewed).</p>
+
+<p>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="graph" id='interview_scores'></div>
+		</div>
+	</div>
+	<div class='row'>
+		<div class="col-xs-12 text-center">
+			<a target='_blank' href='https://github.com/kmclaugh/D3_Graphs/tree/master/smart_hiring'>Graph Source Code</a>
+		</div>
+	</div>
+</p>
+
+<p>Unlike the typical hiring example, my team and I did not discuss candidates after the interview. To make the final hiring decisions, I relied exclusively on a combination of the resume and interview scores. In another section of <a target="_blank" href="https://app.owlandscroll.com/annotation/Aj635R8NkbH1w4xz6PdU"><em>Thinking Fast and Slow</em></a>, Kahneman recommends giving more weight to a candidate's resume than her interview. <sup class="footnote" id="fnsup5"><a href="#fn5">5</a></sup><sup>,</sup> After all, a person's resume represents the entirety of their life's work, which should carry more weight than an hour-long interview. So for the candidate's final score, I multiplied their normalized resume score by 1.5 and added it to their normalized interview score. Here are the final results.</p>
+
+<p>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="graph" id='final_scores'></div>
+		</div>
+	</div>
+	<div class='row'>
+		<div class="col-xs-12 text-center">
+			<a target='_blank' href='https://github.com/kmclaugh/D3_Graphs/tree/master/smart_hiring'>Graph Source Code</a>
+		</div>
+	</div>
+</p>
+
+<p>After creating the final hiring score, picking which candidates to hire was easy. I simply picked the highest scoring candidates. Outside of making the final decision a snap, the Israeli military method of hiring provides several benefits.</p>
+<p>For one, it makes evaluating resumes fast and easy. Instead of reading each resume in detail, I could just count up skills and plug the results into a spreadsheet. The weighting of more important skills made sure I didn't treat <strong>Required</strong> skills and <strong>Nice-to-Have</strong> skills the same, which, because of our human tendency to think categorically, would be difficult without an algorithm. Finally, the resume scoring system helped me ignore irrelevancies like spelling errors and formatting which are tempting to use as proxies for character traits like attention to detail and organization.</p>
+<p>The interview process ensured that my team was able to separate different, important characteristics like independence and teamwork from more holistic traits like extraversion and likability. Most importantly, the coding challenge tested the candidates' skills under the conditions in which they would actually work.</p>
+<p>Finally the numeric scoring systems of both the resumes and interviews made it easy to objectively compare candidates to one another and make a final decision. When I developed this hiring plan I expected all of these benefits. However, there were a number of surprising benefits which I did not anticipate.</p>
+<p>Contrary to what I indicated above, I didn't actually receive all the resumes up front, score each resume, select the best resumes for interviews, interview the candidates, score each interview, and, after completing all interviews, select candidates based on the highest final scores. The real world is much messier than that. I was constantly receiving new resumes while interviewing previous candidates. Often, I had to accept or reject a candidate before I could even see new resumes.</p>
+<p>Didn't the messy real world destroy my nice, clean hiring plan? Actually just the opposite. After interviewing a few candidates, I realized I could correlate the resume scores and final scores with a linear regression. This way I could predict how good a new candidate's final score would be based only on their resume, making it easy to compare them to candidates I'd already interviewed. Here's a graph of the final scores versus the resume scores.</p>
+
+<p>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="graph" id='resume_v_final'></div>
+		</div>
+	</div>
+	<div class='row'>
+		<div class="col-xs-12 text-center">
+			<a target='_blank' href='https://github.com/kmclaugh/D3_Graphs/tree/master/smart_hiring'>Graph Source Code</a>
+		</div>
+	</div>
+</p>
+
+<p>The linear regression line shows the predicted final score, based on a resume score. <sup class="footnote" id="fnsup6"><a href="#fn6">6</a></sup> Since we were hiring three developers, the cutoff line shows which resumes might belong to candidates better than my current top three. I calculated the cutoff line using the resume score of the third best candidate - in this case, Winston - minus 10%. <sup class="footnote" id="fnsup7"><a href="#fn7">7</a></sup> If a candidate's resume score was higher than the cutoff line, I brought them in for an interview. The best part of this process is that it constantly updated, becoming more accurate as I interviewed more candidates.</p>
+<p>There was one more surprising benefit to a numerical hiring plan, it prevents, or at least mitigates stereotypical hiring. It so happened that the first few candidates we interviewed were women. After these interviews, a coworker explained to me that since this was a six-month project we would be ill-advised to hire a woman because they were more likely to take extended periods of time off, which we could not afford. As he explained, he had been burned by this before. I simply told him that we would hire the candidate with the highest score regardless of any other factors. And if he consistently rated women worse, I would know it.</p>
+<p>Our innate cognitive biases lead us to believe that we are good at looking into a candidate's eyes and reading their soul. Science clearly tells us we are not. Therefore, it's critical to structure every step of the hiring process to combat these biases. However, as <a target="_blank" href="https://app.owlandscroll.com/annotation/lBpPEhZKDSb1OkmCNj3Y">Kahneman says</a>, implementing his hiring strategy "requires relatively little effort but substantial discipline". Acting on our intuitions feels good and people like to believe they can "take the measure of the man". <sup class="footnote" id="fnsup8"><a href="#fn8">8</a></sup></p>
+<p>Throughout my hiring process, I received a lot of resistance. One member of my hiring team told me he didn't pay attention to the behavioral questions. Rather, he judged candidates on more intuitive metrics, like how long of a pause they took before responding to questions. <sup class="footnote" id="fnsup9"><a href="#fn9">9</a></sup> Another acquaintance told me that this method worked fine in our situation, but he served on an interview panel where they didn't have time for such a rigorous method and thus had to make up questions on the spot. I suggested that he should then trash the interview entirely and just shuffle the resumes since that would take less time and be just as effective.</p>
+<p>The resistance leads to the larger lesson of analytical hiring and other analytical practices. As <a target="_blank" href="https://app.owlandscroll.com/annotation/lBpPEhZKDSb1OkmCNj3Y">Kahneman says</a>, his method is not perfect. It improved the Israeli military's evaluations from "completely useless" to "moderately useful". No intuition or algorithm can perfectly predict the future, despite how much comfort it might give us to believe that either can. But an improvement to "moderately useful" can, in the long run, provide a business with a significant edge and, as we've seen, mitigate many iniquitous results of intuitive practices. Perhaps the world would be a better place if we accepted "moderately useful" more often.</p>
+
+<hr class="end-bar" style="border-width: 3px;"><p><sup id="fn1">1.  The book also suggests this is one reason why extroverts are overvalued in our society. <a href="#fnsup1">^</a></sup></p>
+
+<p><sup id="fn2">2.  Only men were eligible for officer training school in 1955. <a href="#fnsup2">^</a></sup></p>
+
+<p><sup id="fn3">3.  For some reason I find many interviewers intentionally try to be intimidating. <a href="#fnsup3">^</a></sup></p>
+
+<p><sup id="fn4">4.  I tested this coding challenge on my development team before the first interview to make sure it worked and help them sympathize with the interviewees. <a href="#fnsup4">^</a></sup></p>
+
+<p><sup id="fn5">5.  Again this is the opposite of what people do in a typical hiring process. In a discussion after the interview people naturally consider only the interview performance, rarely even referencing the resume. <a href="#fnsup5">^</a></sup></p>
+
+<p><sup id="fn6">6.  Note that the R<sup>2</sup> value is 0.76, so as we'd expect candidates with good resumes tend do well in interviews. <a href="#fnsup6">^</a></sup></p>
+
+<p><sup id="fn7">7.  I subtracted 10% because someone might outperform their resume score and thus end up being a better choice than Winston. <a href="#fnsup7">^</a></sup></p>
+
+<p><sup id="fn8">8.  Or, as we've seen, dismiss the woman. <a href="#fnsup8">^</a></sup></p>
+
+<p><sup id="fn9">9.  Fortunately the numerical scores made it easy to deal with his intuitive methods. I just threw out his ratings. <a href="#fnsup9">^</a></sup></p>
+
