@@ -1,0 +1,125 @@
+<style>
+  div img { width: 100%; max-width: 400px; display:block; margin-left: auto; margin-right: auto; }
+  </style>
+<img src="https://s3.amazonaws.com/countingcalculi-assets/images/inline_install/logo.png" alt="Google Sheets to Jupyter Notebooks"></p>
+<p>With the <a target="_blank" href="https://www.blog.google/products/chrome/chromes-turning-10-heres-whats-new/">latest release of Chrome 71</a>, Google has, due to <a target="_blank" href="https://venturebeat.com/2018/06/12/google-disables-inline-installation-for-chrome-extensions/">security concerns</a>, removed the <a target="_blank" href="https://developer.chrome.com/webstore/inline_installation">inline-install</a> feature for Chrome extensions, which let users install a web application’s associated extension directly from the app itself.</p>
+<p>While this doesn’t matter much to standalone extensions like <a target="_blank" href="https://chrome.google.com/webstore/detail/session-buddy/edacconmaakjimmfgnblocblbcdcpbko?hl=en">session buddy</a>, it does make it difficult for apps like <a target="_blank" href="https://www.owlandscroll.com/?utm_campaign=inline-install-replacement&amp;utm_medium=free&amp;utm_source=counting-calculi">Owl <em>&amp;</em> Scroll</a>, which rely on an integrated chrome extension for essential functions, to create a smooth and pleasant onboarding experience for users.</p>
+<p>With inline-install, users could install a chrome extension without ever leaving the app. This allowed developers to control the onboarding experience. Without inline-install, users have to leave the app for the chrome store to install the extension and then come back to the app of their own volition like so:</p>
+<p><iframe width="560" height="315" src="https://www.youtube.com/embed/lIoPMrvh6Z0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></p>
+<p>For users familiar with how Chrome extensions work, this may only be a small bump. But for users that aren’t as familiar, this may cause them to get lost in the chrome store, not realizing that they have to return to the app.</p>
+<h1><a id="Quick_Setup_10"></a>Quick Setup</h1>
+<p>While nothing will be as smooth as inline-install, there is, fortunately, a <a target="_blank" href="https://gist.github.com/kmclaugh/8d71014b14f33c5035fae86328374969">workaround</a> that is nearly as good. At a high level, here’s how to implement the workaround:</p>
+<ol>
+<li>Send the user to your extension’s install page in the chrome store via a new tab link in your app.</li>
+<li>When the user installs the extension, inject its content scripts into the requisite web pages so the user doesn’t have to refresh any pages (a good idea even with inline-install).</li>
+<li>And, finally send the user back to the app.</li>
+</ol>
+<p>For those pressed for time, here’s what this user experience looks like in Owl <em>&amp;</em> Scroll:</p>
+<p><iframe width="560" height="315" src="https://www.youtube.com/embed/LuRea5QYDXE" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></p>
+<p>As you can see, after the user agrees to install the extension, they are automatically sent back to the app. <a target="_blank" href="https://gist.github.com/kmclaugh/8d71014b14f33c5035fae86328374969">Here</a> is the code to make it happen.</p>
+<p>To use the code in your app and extension, just:</p>
+<ol>
+<li>Add your extension’s install link (in webApp.htnl) to your app.</li>
+<li>Add the <code>background.js</code> code to the top of your extension’s <code>background.js</code> file.</li>
+<li>Update the <code>appDomainURLMatch</code> and <code>appDomainURLCononical</code> variables for your app. The <code>appDomainURLMatch</code> should be whatever <a target="_blank" href="https://developer.chrome.com/extensions/match_patterns">chrome match patterns</a> fit your app’s domain and the <code>appDomainURLCononical</code> variable is the default (ie canonical) URL of your app.</li>
+</ol>
+<p>This should work for any extension without any modification (except the variables above) so feel free to skip the rest of this post. But for the curious, we’ll briefly go over how it works.</p>
+<h1><a id="How_It_Works_30"></a>How It Works</h1>
+<p>The first bit of code is simple enough. It’s just a link to the extension’s install page that opens in a new tab. You can put this wherever you’d like in your app.</p>
+<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">target</span>=<span class="hljs-value">"_blank"</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">"noopener noreferrer"</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"https://chrome.google.com/webstore/detail/ehncpahhfadkdfneafgehhdfjfiddpje"</span>&gt;</span>
+    Install Extension
+<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+</code></pre>
+<p>Next, is the <code>appDomainURLMatch</code>. This is used to find the tab containing your app in the makeAppActive function using <a target="_blank" href="https://developer.chrome.com/extensions/match_patterns">chrome’s url match patterns</a>:</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">var</span> appDomainURL = <span class="hljs-string">"*://app.owlandscroll.com/*"</span>;
+</code></pre>
+<p>The <code>appDomainURLCononical</code> variable is the default (ie canonical) URL of your app.</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">var</span> appDomainURL = <span class="hljs-string">"*://app.owlandscroll.com/*"</span>;
+</code></pre>
+<p>If the user doesn’t already have your app open in another chrome tab (ie if the user installs your extension directly from the chrome store instead of from your link above), the <code>makeAppActive</code> function will open the app in a fresh tab using the canonical link above like so:</p>
+<p><iframe width="560" height="315" src="https://www.youtube.com/embed/SGdXhxBj5R4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></p>
+<p>You should already have your content scripts defined in your <code>manifest.js</code>. Here’s what ours manifest looks like as an example:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">/* content_scripts portion of our manifest.js */</span>
+<span class="hljs-string">"content_scripts"</span>: [
+    {
+      <span class="hljs-string">"matches"</span>: [<span class="hljs-string">"https://read.amazon.com/notebook*"</span>, <span class="hljs-string">"https://read.amazon.com/kp/notebook*"</span>],
+      <span class="hljs-string">"css"</span>: [<span class="hljs-string">"styles.css"</span>],
+      <span class="hljs-string">"js"</span>: [
+        <span class="hljs-string">"libs/jquery-3.3.1.min.js"</span>,
+        <span class="hljs-string">"parser.js"</span>,
+        <span class="hljs-string">"insertionMarkup.js"</span>,
+        <span class="hljs-string">"index.js"</span>
+      ],
+      <span class="hljs-string">"run_at"</span>: <span class="hljs-string">"document_end"</span>
+    },
+    {
+      <span class="hljs-string">"matches"</span>: [<span class="hljs-string">"https://app.owlandscroll.com/*"</span>, <span class="hljs-string">"https://dev.owlandscroll.com/*"</span> ],
+      <span class="hljs-string">"js"</span>: [
+        <span class="hljs-string">"config.js"</span>,
+        <span class="hljs-string">"appMessages.js"</span>
+      ],
+      <span class="hljs-string">"run_at"</span>: <span class="hljs-string">"document_end"</span>
+    }
+  ]
+</code></pre>
+<p>The longest and most complex bit of code in our <code>background.js</code> file injects all your content scripts into their appropriate web pages like so:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">/*
+ * Inject content scripts when the user installs the extension so the user doensn't have to refresh the page
+ */</span>
+chrome.runtime.onInstalled.addListener(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-comment">//Get content scripts from manifest</span>
+  chrome.manifest = chrome.app.getDetails();
+  <span class="hljs-keyword">var</span> scripts = chrome.manifest.content_scripts;
+  <span class="hljs-keyword">var</span> appTab;
+  <span class="hljs-comment">// Loop through all tabs of all windows...</span>
+  chrome.windows.getAll({ populate: <span class="hljs-literal">true</span> }, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">windows</span>) </span>{
+    windows.map(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">window</span>) </span>{
+      <span class="hljs-built_in">window</span>.tabs.map(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">tab</span>) </span>{
+        <span class="hljs-comment">// ...loop through all content scripts urls matches...</span>
+        scripts.map(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">script</span>) </span>{
+          script.matches.map(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">scriptUrl</span>) </span>{
+            <span class="hljs-comment">// ...if the tab url matches a content script url...</span>
+            <span class="hljs-keyword">if</span> (tab.url.match(scriptUrl)) {
+              <span class="hljs-comment">// ...inject all javasScripts from the content script into the tab...</span>
+              <span class="hljs-keyword">if</span> (script.js) {
+                script.js.map(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">javasScript</span>) </span>{
+                  chrome.tabs.executeScript(tab.id, { file: javasScript });
+                });
+              }
+              <span class="hljs-comment">// ...inject all css from the content script into the tab</span>
+              <span class="hljs-keyword">if</span> (script.css) {
+                script.css.map(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">css</span>) </span>{
+                  chrome.tabs.insertCSS(tab.id, { file: css });
+                });
+              }
+            }
+          });
+        });
+      });
+    });
+  });
+  makeAppActive();
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Extension and content scripts installed"</span>);
+});
+</code></pre>
+<p>Note that the code above has so many loops because an extension may install multiple, different scripts on multiple, different web pages. For instance, Owl <em>&amp;</em> Scroll injects a script called appMessages.js into the app, which lets the app and extension communicate with each other. Separately, it injects several css and js files into the <a target="_blank" href="https://read.amazon.com/notebook">Kindle Notes and Highlights</a> page, which adds a button to import user’s highlights into Owl <em>&amp;</em> Scroll.</p>
+<p>Finally, at the end of the onInstall code, you’ll see that we send the user back to our app with the <code>makeAppActive</code> function:</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">const</span> makeAppActive = () =&gt; {
+  chrome.tabs.query({ url: config.appDomainURL }, tabs =&gt; {
+    <span class="hljs-keyword">if</span> (tabs.length) {
+      <span class="hljs-keyword">var</span> tab = tabs[<span class="hljs-number">0</span>];
+      chrome.tabs.sendMessage(tab.id, { sendingUserToApp: <span class="hljs-literal">true</span> }, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">
+        response
+      </span>) </span>{
+        <span class="hljs-built_in">console</span>.log(response);
+      });
+      chrome.tabs.update(tab.id, { selected: <span class="hljs-literal">true</span> });
+    } <span class="hljs-keyword">else</span> {
+      chrome.tabs.create({ url: appDomainURLCononical });
+    }
+  });
+};
+</code></pre>
+<p>This code loops through all of the user’s tab to find the first one that matches your <code>appDomainURLMatch</code>. If it doesn’t find any it opens the app in a fresh tab at your <code>ppDomainURLCononical</code>.</p>
+<p>And that’s it. With just a link to your extension’s install page and few lines of code added to the <code>background.js</code> file of your extension, you can (almost) replace chrome’s now missing inline-install feature.</p>
+<p>To make an extra smooth experience, you can replace inline-install’s successCallback function with either <a target="_blank" href="https://developer.chrome.com/extensions/extension#method-sendRequest">sendRequest</a> or using your own version of <code>appMessage.js</code>, which we’ll describe in a later post.</p>
